@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyin.wycds.web.dal.datainterface.ColumnInfoDAO">
+    <cache/>
+    <resultMap type="ColumnInfoDO" id="columnInfoResultMap">
+        <id property="id" column="column_info_id"/>
+        <result property="splittingKeyId" column="splitting_key_id"/>
+        <result property="clusterId" column="cluster_id"/>
+        <result property="tableName" column="table_name"/>
+        <result property="columnName" column="column_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="modifiedBy" column="modified_by"/>
+        <result property="modificationDate" column="modification_date"/>
+        <result property="deleteStatus" column="delete_status"/>
+    </resultMap>
+    <!-- 获取状态为"未删除"的所有切分键映射表字段信息 -->
+    <select id="getColumnInfoList" parameterType="com.wangyin.wycds.web.util.Paginator" resultType="ColumnInfoDO"
+            resultMap="columnInfoResultMap">
+        select * from columninfo where delete_status='false' order by column_info_id desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 获取状态为"未删除"的所有切分键映射表字段信息总数 -->
+    <select id="getColumnInfoListCount" resultType="Integer">
+        select count(column_info_id) from columninfo where delete_status='false'
+    </select>
+    <!-- 根据组合条件查询切分键映射表字段信息-->
+    <select id="getColumnInfoAndClassNoPaginator" parameterType="map" resultType="ColumnInfoDO" resultMap="columnInfoResultMap">
+        select * from columninfo
+        <where>
+            delete_status='false'
+            <if test="tableName!=null and tableName!=''">and table_name=#{tableName}</if>
+            <if test="columnName!=null and columnName!=''">and column_name=#{columnName}</if>
+        </where>
+        order by column_info_id desc
+    </select>
+    <!-- 根据组合条件查询切分键映射表字段信息-->
+    <select id="getColumnInfoAndClass" parameterType="map" resultType="ColumnInfoDO" resultMap="columnInfoResultMap">
+        select * from columninfo
+        <where>
+            delete_status='false'
+            <if test="columnInfoVO.splittingKeyId!=null and columnInfoVO.splittingKeyId!=''">and splitting_key_id=#{columnInfoVO.splittingKeyId}</if>
+            <if test="columnInfoVO.tableName!=null and columnInfoVO.tableName!=''">and table_name like CONCAT(CONCAT('%', #{columnInfoVO.table}),'%')</if>
+            <if test="columnInfoVO.columnName!=null and columnInfoVO.columnName!=''">and column_name like CONCAT(CONCAT('%', #{columnInfoVO.column}),'%')</if>
+            <if test="columnInfoVO.clusterId!=null and columnInfoVO.clusterId!=''">and cluster_id=#{columnInfoVO.clusterId}</if>
+        </where>
+        order by column_info_id desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 根据组合条件查询切分键映射表字段信息总数-->
+    <select id="getColumnInfoAndClassCount" parameterType="map" resultType="Integer">
+        select count(column_info_id) from columninfo
+        <where>
+            delete_status='false'
+            <if test="columnInfoVO.splittingKeyId!=null and columnInfoVO.splittingKeyId!=''">and splitting_key_id=#{columnInfoVO.splittingKeyId}</if>
+            <if test="columnInfoVO.tableName!=null and columnInfoVO.tableName!=''">and table_name like CONCAT(CONCAT('%', #{columnInfoVO.table}),'%')</if>
+            <if test="columnInfoVO.columnName!=null and columnInfoVO.columnName!=''">and column_name like CONCAT(CONCAT('%', #{columnInfoVO.column}),'%')</if>
+            <if test="columnInfoVO.clusterId!=null and columnInfoVO.clusterId!=''">and cluster_id=#{columnInfoVO.clusterId}</if>
+        </where>
+    </select>
+    <!-- 根据id查询切分键映射表字段信息-->
+    <select id="getColumnInfo" parameterType="String" resultType="ColumnInfoDO" resultMap="columnInfoResultMap">
+        select * from columninfo where column_info_id=#{id}
+    </select>
+    <!-- 更新切分键映射表字段信息 -->
+    <update id="updateColumnInfo" parameterType="ColumnInfoDO">
+        UPDATE columninfo
+        <set>
+            <if test="tableName!=null and tableName!=''">table_name=#{tableName},</if>
+            <if test="columnName!=null and columnName!=''">column_name=#{columnName},</if>
+            <if test="clusterId!=null and clusterId!=''">cluster_id=#{clusterId},</if>
+            <if test="modifiedBy!=null and modifiedBy!=''">modified_by=#{modifiedBy}</if>
+        </set>
+        <where>
+            column_info_id=#{id}
+        </where>
+    </update>
+    <!-- 删除切分键映射表字段信息 -->
+    <update id="deleteColumnInfo" parameterType="String">
+        UPDATE columninfo set delete_status='true',modified_by=#{modifiedBy},modification_date=sysdate() where column_info_id=#{id}
+    </update>
+    <!-- 插入切分键映射表字段信息 -->
+    <insert id="insertColumnInfo" parameterType="ColumnInfoDO" useGeneratedKeys="true">
+        INSERT INTO columninfo
+        (`splitting_key_id`,
+        `table_name`,
+        `cluster_id`,
+        `column_name`,
+        `create_by`,
+        `creation_date`,
+        `modification_date`,
+        `modified_By`)
+        VALUES
+        (#{splittingKeyId},
+        #{tableName},
+        #{clusterId},
+        #{columnName},
+        #{createBy},
+        sysdate(),
+        sysdate(),
+        #{modifiedBy});
+    </insert>
+</mapper>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyin.wycds.web.dal.datainterface.SplittingKeyRuleRelationDAO">
+    <cache/>
+    <resultMap type="SplittingKeyRuleRelationDO" id="splittingKeyRuleRelationResultMap">
+        <id property="id" column="r_rules_splitting_key_id"/>
+        <result property="splittingKeyId" column="splitting_key_id"/>
+        <result property="depotsTableRulesId" column="depots_table_rules_id"/>
+        <result property="ruleType" column="rule_type"/>
+        <result property="dbGroupId" column="db_group_id"/>
+        <result property="tableSuffix" column="table_suffix"/>
+        <result property="upperLimit" column="upper_limit"/>
+        <result property="lowerLimit" column="lower_limit"/>
+        <result property="hashValue" column="hash_value"/>
+    </resultMap>
+    <!-- 获取所有分库分表关联,根据切分键id-->
+    <select id="getSplittingKeyRuleRelationListBySplittingKeyId" parameterType="map"
+            resultType="SplittingKeyRuleRelationDO"
+            resultMap="splittingKeyRuleRelationResultMap">
+        select * from rrulessplittingkey r,depotstablerules d where r.depots_table_rules_id=d.depots_table_rules_id
+        and splitting_key_id=#{splittingKeyId} and d.db_group_id in
+        <foreach  collection="groupIds" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        order by r.r_rules_splitting_key_id desc
+    </select>
+    <!-- 获取所有分库分表关联规则信息,无分页 -->
+    <select id="getSplittingKeyRuleRelationListNoPaginator" parameterType="com.wangyin.wycds.web.util.Paginator"
+            resultType="SplittingKeyRuleRelationDO"
+            resultMap="splittingKeyRuleRelationResultMap">
+        select * from rrulessplittingkey r,depotstablerules d where r.depots_table_rules_id=d.depots_table_rules_id
+        order by r.r_rules_splitting_key_id desc
+    </select>
+    <!-- 获取所有分库分表关联规则信息 -->
+    <select id="getSplittingKeyRuleRelationList" parameterType="com.wangyin.wycds.web.util.Paginator"
+            resultType="SplittingKeyRuleRelationDO"
+            resultMap="splittingKeyRuleRelationResultMap">
+        select * from rrulessplittingkey r,depotstablerules d where r.depots_table_rules_id=d.depots_table_rules_id
+        order by r.r_rules_splitting_key_id desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 获取所有分库分表关联规则信息总数 -->
+    <select id="getSplittingKeyRuleRelationListCount" resultType="Integer">
+        select count(r_rules_splitting_key_id) from rrulessplittingkey
+    </select>
+    <!-- 根据组合条件查询分库分表关联规则信息-->
+    <select id="getSplittingKeyRuleRelationAndClass" parameterType="map" resultType="SplittingKeyRuleRelationDO"
+            resultMap="splittingKeyRuleRelationResultMap">
+        select * from rrulessplittingkey r,depotstablerules d
+        <where>
+            r.depots_table_rules_id=d.depots_table_rules_id
+            <if test="splittingKeyRuleRelationVO.dbGroupId!=null and splittingKeyRuleRelationVO.dbGroupId!=''">and
+                db_group_id=#{splittingKeyRuleRelationVO.dbGroupId}
+            </if>
+            <if test="splittingKeyRuleRelationVO.depotsTableRulesId!=null and splittingKeyRuleRelationVO.depotsTableRulesId!=''">
+                and r.depots_table_rules_id=#{splittingKeyRuleRelationVO.depotsTableRulesId}
+            </if>
+            <if test="splittingKeyRuleRelationVO.splittingKeyId!=null and splittingKeyRuleRelationVO.splittingKeyId!=''">
+                and r.splitting_key_id=#{splittingKeyRuleRelationVO.splittingKeyId}
+            </if>
+        </where>
+        order by r_rules_splitting_key_id desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 根据组合条件查询分库分表关联规则信息总数-->
+    <select id="getSplittingKeyRuleRelationAndClassCount" parameterType="map" resultType="Integer">
+        select count(r_rules_splitting_key_id) from rrulessplittingkey r,depotstablerules d
+        <where>
+            r.depots_table_rules_id=d.depots_table_rules_id
+            <if test="splittingKeyRuleRelationVO.dbGroupId!=null and splittingKeyRuleRelationVO.dbGroupId!=''">and
+                db_group_id=#{splittingKeyRuleRelationVO.dbGroupId}
+            </if>
+            <if test="splittingKeyRuleRelationVO.depotsTableRulesId!=null and splittingKeyRuleRelationVO.depotsTableRulesId!=''">
+                and r.depots_table_rules_id=#{splittingKeyRuleRelationVO.depotsTableRulesId}
+            </if>
+            <if test="splittingKeyRuleRelationVO.splittingKeyId!=null and splittingKeyRuleRelationVO.splittingKeyId!=''">
+                and r.splitting_key_id=#{splittingKeyRuleRelationVO.splittingKeyId}
+            </if>
+        </where>
+    </select>
+    <!-- 根据id查询分库分表关联规则信息-->
+    <select id="getSplittingKeyRuleRelation" parameterType="String" resultType="SplittingKeyRuleRelationDO"
+            resultMap="splittingKeyRuleRelationResultMap">
+        select * from rrulessplittingkey where r_rules_splitting_key_id=#{id}
+    </select>
+    <!-- 更新分库分表关联规则信息 -->
+    <update id="updateSplittingKeyRuleRelation" parameterType="SplittingKeyRuleRelationDO">
+        UPDATE rrulessplittingkey
+        <set>
+            <if test="depotsTableRulesId!=null and depotsTableRulesId!=''">
+                depots_table_rules_id=#{depotsTableRulesId},
+            </if>
+            <if test="modifiedBy!=null and modifiedBy!=''">modified_by=#{modifiedBy}</if>
+        </set>
+        <where>
+            r_rules_splitting_key_id=#{id}
+        </where>
+    </update>
+    <!-- 删除分库分表关联规则信息 -->
+    <update id="deleteSplittingKeyRuleRelation" parameterType="String">
+        delete from rrulessplittingkey where r_rules_splitting_key_id=#{id}
+    </update>
+    <!-- 插入分库分表关联规则信息 -->
+    <insert id="insertSplittingKeyRuleRelation" parameterType="SplittingKeyRuleRelationDO" useGeneratedKeys="true">
+        INSERT INTO rrulessplittingkey
+        (`splitting_key_id`,
+        `depots_table_rules_id`)
+        VALUES
+        (#{splittingKeyId},
+        #{depotsTableRulesId});
+    </insert>
+</mapper>

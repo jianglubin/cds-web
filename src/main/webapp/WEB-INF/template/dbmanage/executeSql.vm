@@ -1,0 +1,54 @@
+<h3 class="page-header">集群信息</h3>
+<form class="form-horizontal" id="insert-form" role="form" action="../executesql/execute" method="post">
+    <div class="row placeholders">
+        <div class="form-group">
+            <label for="clusterName" class="col-sm-2 control-label">集群名称</label>
+
+            <div class="col-sm-3">
+                <select class="form-control" id="clusterName" name="dbClusterId">
+                    <option></option>
+                    #if($!dbClusterVOList)
+                        #foreach($dbcluster in $!dbClusterVOList)
+                            <option value="$!{dbcluster.id}">
+                                [$!{dbcluster.id}]$!{dbcluster.clusterName}
+                            </option>
+                        #end
+                    #end
+                </select>
+            </div>
+            <label class="col-sm-3 text-danger">目前只支持对表和字段的操作!</label>
+        </div>
+        <div class="form-group">
+            <label for="sql" class="col-sm-2 control-label">sql语句</label>
+
+            <div class="col-sm-5">
+                <textarea class="form-control" rows="8" class="form-control" id="sql" name="sql"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary glyphicon glyphicon-ok">
+                    执 行
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="text-success col-sm-offset-2 col-sm-10" id="handle-message">
+                #if( $!{message})
+                    $!{message}
+                #elseif($!{error})
+                    <p class="text-danger glyphicon glyphicon-remove">$!{error}</p>
+                #end
+            </div>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    var J = jQuery.noConflict();
+    J(document).ready(function () {
+        J("#clusterName").select2({
+            placeholder: "选择一个集群",
+            allowClear: true
+        });
+    });
+</script>

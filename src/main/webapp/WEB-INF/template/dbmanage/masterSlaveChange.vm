@@ -1,0 +1,148 @@
+<h3 class="page-header">群组信息</h3>
+<form class="form-horizontal" id="insert-form" role="form" action="../mschange/query" method="post">
+    <div class="row placeholders">
+        <div class="form-group">
+            <label for="groupName" class="col-sm-2 control-label">群组名称</label>
+
+            <div class="col-sm-3">
+                <select class="form-control" id="groupName" name="groupId">
+                    <option></option>
+                    #if($!dbGroupVOList)
+                        #foreach($dbgroup in $!dbGroupVOList)
+                            <option value="$!{dbgroup.id}">
+                                [$!{dbgroup.id}]$!{dbgroup.groupName}
+                            </option>
+                        #end
+                    #end
+                </select>
+                <input type="hidden" id="groupId" value="$!groupId">
+            </div>
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary glyphicon glyphicon-ok" id="queryGroup">
+                    查 询
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="text-success col-sm-offset-2 col-sm-10" id="handle-message">
+                #if( $!{message})
+                    $!{message}
+                #elseif($!{error})
+                    <p class="text-danger glyphicon glyphicon-remove">$!{error}</p>
+                #end
+            </div>
+        </div>
+
+    </div>
+    <h3 class="sub-header">关联数据库</h3>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>数据库名称</th>
+                <th>ip</th>
+                <th>端口</th>
+                <th>主/备库</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+                #if($!dbInfoDbGroupRelationServiceDbGroupList&&$!dbInfoDbGroupRelationServiceDbGroupList.size()!=0)
+                    #foreach($dbinfo in $!dbInfoDbGroupRelationServiceDbGroupList)
+                    <tr>
+                        <td>$!{dbinfo.id}
+                            <input type="hidden" id="id" name="id" value="$!{dbinfo.id}">
+                        </td>
+                        <td>$!{dbinfo.dbName}</td>
+                        <td>$!{dbinfo.ip}</td>
+                        <td>$!{dbinfo.port}</td>
+                        <td>
+                            #if($!{dbinfo.masterOrSlave}=="Master")
+                                主库
+                            #elseif($!{dbinfo.masterOrSlave}=="Slave")
+                                备库
+                            #end
+                        </td>
+                        <td>
+                            #if($!{dbinfo.masterOrSlave}=="Slave")
+                                <button class-data="J-delete" class="btn btn-danger btn-sm">
+                                    设为主库
+                                </button>
+                            #end
+                        </td>
+                    </tr>
+                    #end
+                #else
+                <tr>
+                    <td colspan="8">暂无数据!</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+</form>
+<script type="text/javascript">
+    var J = jQuery.noConflict();
+    J(document).ready(function () {
+        J("#groupName").select2({
+            placeholder: "选择一个群组",
+            allowClear: true
+        });
+        //主从切换
+        J("#insert-form").on("click", "button[class-data=J-delete]", function (e) {
+            e.preventDefault();
+            var tr = J(this).parents("tr");
+            var groupId = J("#groupId").val()
+            var id = tr.find("#id").val();
+            if (confirm("确定要进行切换么?")) {
+                J.ajax({
+                    url: "http://localhost/cdsserver/" + groupId + "/dbswitch",
+                    data: "",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                    success: function (data, textStatus, jqXHR) {
+                        var switchResult = J.parseJSON(jqXHR.responseText);
+                        var messageObj = J("#handle-message");
+                        if (switchResult=="success") {
+                            updateInfo(groupId,id);
+                        } else {
+                            messageObj.text('切换失败!');
+                        }
+                    },
+                    error: function (xhr, textStatus) {
+                        J("#handle-message").text('切换失败1!');
+                    }
+                });
+            }
+        });
+        //执行真正的数据库变更操作
+        function updateInfo(groupId,id){
+            J.ajax({
+                url: '../mschange/update.json',
+                data: "groupId=" + groupId + "&id=" + id,
+                type: "POST",
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                success: function (data, textStatus, jqXHR) {
+                    var error = J.parseJSON(jqXHR.responseText).error;
+                    if (error) {
+                        alert(error);
+                    } else {
+                        alert("切换成功!");
+                    }
+                },
+                error: function (xhr, textStatus) {
+                    alert('切换失败!');
+                }
+            });
+        }
+        //展示错误信息
+        function showErrorMessage(obj, message) {
+            obj.text(message);
+            obj.addClass("text-danger glyphicon glyphicon-remove");
+        }
+    });
+</script>

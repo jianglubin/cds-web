@@ -1,0 +1,29 @@
+<ul class="nav nav-sidebar">
+    <li><a href="../dbinfo/show">数据库维护</a></li>
+    <li><a href="../dbgroup/show">数据库群组维护</a></li>
+    <li><a href="../dbcluster/show">数据库集群维护</a></li>
+    <li><a href="../datasource/mangershow">数据源维护</a></li>
+    <li><a href="../datasource/queryshow">数据源查询</a></li>
+    <li><a href="../app/show">应用维护</a></li>
+</ul>
+<ul class="nav nav-sidebar">
+    <li><a href="../clustergroup/show">集群与群组关系维护</a></li>
+    <li><a href="../dbinfogroup/show">群组与数据库关系维护</a></li>
+</ul>
+<ul class="nav nav-sidebar">
+    <li><a href="../splittingkey/show">切分键维护</a></li>
+    <li><a href="../columninfo/show">切分键映射规则</a></li>
+    <li><a href="../depotsTableRules/show">分库分表规则维护</a></li>
+    <li><a href="../splittingkeyrulerelation/show">分库分表规则与切分健关系</a></li>
+</ul>
+<ul class="nav nav-sidebar">
+    <li><a href="../web-qm/home.jsp" target="_blank">数据库状态浏览</a></li>
+    <li><a href="../executesql/show">执行SQL</a></li>
+    <li><a href="../mschange/show">主备切换</a></li>
+</ul>
+##<script type="text/javascript">
+##    var J = jQuery.noConflict();
+##    J(document).ready(function () {
+##        J("#J-content").load("/clustergroup /show");
+##    });
+##</script>

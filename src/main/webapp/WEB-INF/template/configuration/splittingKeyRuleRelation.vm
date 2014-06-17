@@ -1,0 +1,164 @@
+<h3 class="page-header">切分键与分库分表规则关联</h3>
+<form class="form-horizontal" id="insert-form" role="form" action="../splittingkeyrulerelation/query" method="post">
+    <div class="row placeholders">
+        <div class="form-group">
+            <label for="splitName" class="col-sm-2 control-label">切分健名称</label>
+
+            <div class="col-sm-3">
+                <select class="form-control" id="splittingKeyId" name="splittingKeyId">
+                    <option></option>
+                    #if($!splittingKeyVOList)
+                        #foreach($splittingKey in $!splittingKeyVOList)
+                            <option value="$!{splittingKey.id}">
+                                [$!{splittingKey.id}]$!{splittingKey.splitName}
+                            </option>
+                        #end
+                    #end
+                </select>
+            </div>
+
+            <label for="splitName" class="col-sm-2 control-label">分库分表规则</label>
+
+            <div class="col-sm-3">
+                <select class="form-control" id="depotsTableRulesId" name="depotsTableRulesId">
+                    <option></option>
+                    #if($!depotsTableRulesVOList)
+                        #foreach($depotsTableRule in $!depotsTableRulesVOList)
+                            <option value="$!{depotsTableRule.id}">
+                                $!{depotsTableRule.id}
+                            </option>
+                        #end
+                    #end
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 col-sm-offset-5">
+            <button type="button" class="btn btn-success glyphicon glyphicon-ok" id="addSplittingkey">新 增</button>
+                <button type="submit" class="btn btn-primary glyphicon glyphicon-search">查 询</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="text-success col-sm-offset-2 col-sm-10" id="handle-message">
+                #if( $!{message})
+                    $!{message}
+                #elseif($!{error})
+                    <p class="text-danger glyphicon glyphicon-remove">$!{error}</p>
+                #end
+            </div>
+        </div>
+
+    </div>
+    <h3 class="sub-header">现有切分健</h3>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>切分健名称</th>
+                <th>分库分表规则</th>
+                <th>规则类型</th>
+                <th>群组ID</th>
+                <th>表后缀</th>
+                <th>规则上限</th>
+                <th>规则下限</th>
+                <th>哈希值</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+                #if($!splittingKeyRuleRelationVOList&&$!splittingKeyRuleRelationVOList.size()!=0)
+                    #foreach($splittingkey in $!splittingKeyRuleRelationVOList)
+                    <tr>
+                        <td>$!{splittingkey.id}
+                            <input type="hidden" id="id" name="id" value="$!{splittingkey.id}">
+                        </td>
+                        <td>
+                            $!{splittingkey.splittingKeyId}
+                        </td>
+                        <td>
+                            $!{splittingkey.depotsTableRulesId}
+                        </td>
+                        <td>
+                            #if(${splittingkey.ruleType}=="hash") 哈希 #end
+                            #if(${splittingkey.ruleType}=="range") 范围 #end
+                        </td>
+                        <td>$!{splittingkey.dbGroupId}</td>
+                        <td>$!{splittingkey.tableSuffix}</td>
+                        <td>$!{splittingkey.upperLimit}</td>
+                        <td>$!{splittingkey.lowerLimit}</td>
+                        <td>$!{splittingkey.hashValue}</td>
+                        <td>
+                        <button class="btn btn-danger btn-sm" class-data="J-deleteSubmit">
+                                删除
+                            </button>
+                        </td>
+                    </tr>
+                    #end
+                #else
+                <tr>
+                    <td colspan="8">暂无数据!</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+        <div class="row placeholders">
+            <input type="hidden" name="page" id="page" value="$!{page}">
+            #parse("/layout/pager.vm")
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    var J = jQuery.noConflict();
+    J(document).ready(function () {
+        J("#splittingKeyId").select2({
+            placeholder: "选择一个切分键",
+            allowClear: true
+        });
+        J("#depotsTableRulesId").select2({
+            placeholder: "选择一个规则",
+            allowClear: true
+        });
+        //新增信息
+        J('#addSplittingkey').click(function (e) {
+            e.preventDefault();
+            J("#insert-form").attr("action", "../splittingkeyrulerelation/add")
+            J("#insert-form").submit();
+        });
+        //删除信息
+        J("#insert-form").on("click", "button[class-data=J-deleteSubmit]", function (e) {
+            e.preventDefault();
+            var tr = J(this).parents("tr");
+            var dbgroupId = tr.children().eq(0).text();
+            if (confirm("确定要删除该条信息?")) {
+                J.ajax({
+                    url: '../splittingkeyrulerelation/delete.json',
+                    data: "id=" + dbgroupId,
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                    success: function (data, textStatus, jqXHR) {
+                        var error = J.parseJSON(jqXHR.responseText).error;
+                        var messageObj = J("#handle-message");
+                        if (error) {
+                            showErrorMessage(messageObj, error);
+                        } else {
+                            messageObj.text('删除信息成功!');
+                            tr.remove();
+                        }
+                    },
+                    error: function (xhr, textStatus) {
+                        J("#handle-message").text('删除信息失败!');
+                    }
+                });
+
+            }
+        });
+        //展示错误信息
+        function showErrorMessage(obj, message) {
+            obj.text(message);
+            obj.addClass("text-danger glyphicon glyphicon-remove");
+        }
+    });
+</script>

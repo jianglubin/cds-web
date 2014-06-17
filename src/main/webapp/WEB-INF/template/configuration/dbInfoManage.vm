@@ -1,0 +1,284 @@
+<h3 class="page-header">新增数据库信息</h3>
+<form class="form-horizontal" id="insert-form" role="form" action="../dbinfo/query" method="post">
+    <div class="row placeholders">
+        <div class="form-group">
+            <label for="ip" class="col-sm-2 control-label">数据库IP</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="ip" name="ip" placeholder="127.0.0.1"
+                       value="$!{dbInfoVO.ip}">
+            </div>
+            <label for="dbName" class="col-sm-1 control-label">数据库名称</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="dbName" name="dbName" placeholder="订单数据库"
+                       value="$!{dbInfoVO.dbName}">
+            </div>
+            <label for="port" class="col-sm-1 control-label">端口</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="port" name="port" placeholder="33061"
+                       value="$!{dbInfoVO.port}">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="text-success col-sm-offset-2 col-sm-10"  id="db-handle-message">
+                #if( $!{message})
+                    $!{message}
+                #elseif($!{error})
+                    <p class="text-danger glyphicon glyphicon-remove">$!{error}</p>
+                #end
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" class="btn btn-success glyphicon glyphicon-ok" id="addDb">新 增</button>
+                <button type="submit" class="btn btn-primary glyphicon glyphicon-search" id="queryDb">查 询</button>
+            </div>
+        </div>
+
+    </div>
+    <h3 class="sub-header">现有数据库</h3>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>数据库名称</th>
+                <th>ip</th>
+                <th>端口</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+                #if($!dbInfoVOList&&$!dbInfoVOList.size()!=0)
+                    #foreach($dbinfo in $!dbInfoVOList)
+                    <tr>
+                        <td>$!{dbinfo.id}</td>
+                        <td>$!{dbinfo.dbName}</td>
+                        <td>$!{dbinfo.ip}</td>
+                        <td>$!{dbinfo.port}</td>
+                        <td>
+                            <button class-data="J-edit" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#myModal">
+                                详情
+                            </button>
+                            <button class-data="J-delete" class="btn btn-danger btn-sm">
+                                删除
+                            </button>
+                        </td>
+                    </tr>
+                    #end
+                #else
+                <tr>
+                    <td colspan="8">暂无数据!</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+        <div class="row placeholders">
+            <input type="hidden" name="page" id="page" value="$!{page}">
+            #parse("/layout/pager.vm")
+        </div>
+    </div>
+</form>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">数据库详情信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="update-form" role="form" action="" method="post">
+                    <div class="form-group">
+                        <label for="detail-id" class="col-sm-3 control-label">ID:</label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="detail-id" name="id" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="detail-ip" class="col-sm-3 control-label">数据库IP:</label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="detail-ip" name="ip">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="detail-port" class="col-sm-3 control-label">端口</label>
+
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="detail-port" name="port"">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="detail-dbName" class="col-sm-3 control-label">数据库名称</label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="detail-dbName" name="dbName">
+                        </div>
+                    </div>
+                    <fieldset disabled>
+                        <div class="form-group">
+                            <label for="detail-createBy" class="col-sm-3 control-label">创建人:</label>
+
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="detail-createBy" name="createBy">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="detail-creationDate" class="col-sm-3 control-label">创建时间:</label>
+
+                            <div class="col-sm-6">
+                                <input type="datetime" class="form-control" id="detail-creationDate"
+                                       name="creationDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="detail-modifiedBy" class="col-sm-3 control-label">更新人:</label>
+
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="detail-modifiedBy" name="modifiedBy">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="detail-modificationDate" class="col-sm-3 control-label">更新时间:</label>
+
+                            <div class="col-sm-6">
+                                <input type="datetime" class="form-control" id="detail-modificationDate"
+                                       name="modificationDate">
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <p id="db-update-message" hidden="hidden"></p>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+                <button type="button" class="btn btn-primary" id="updateInfo">更 新</button>
+                <button id="res" id="res" type="reset" hidden="hidden"/>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var J = jQuery.noConflict();
+    J(document).ready(function () {
+        //新增数据库信息
+        J("#addDb").click(function (e) {
+            e.preventDefault();
+            J("#insert-form").attr("action", "../dbinfo/add")
+            J("#insert-form").submit();
+        });
+        //绑定操作的方法 展示详情信息
+        J("#insert-form").on("click", "button[class-data=J-edit]", function(e){
+            e.preventDefault();
+            resetForm();
+            var dbInfoId = J(this).parents("tr").children().eq(0).text();
+            J.ajax({
+                type: "POST",
+                url: "../dbinfo/showDetail.json",
+                data: "id=" + dbInfoId,
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    //设置信息
+                    putInfo(jqXHR, "false");
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    var message = J("#db-update-message");
+                    showErrorMessage(message, xhr);
+                }
+            });
+        });
+        //设置返回的数据库信息
+        function putInfo(jqXHR, isUpdate) {
+            var dbinfo = J.parseJSON(jqXHR.responseText).dbInfoVO;
+            var error = J.parseJSON(jqXHR.responseText).error;
+            var messageObj = J("#db-update-message");
+            if (error) {
+                showErrorMessage(messageObj, error);
+            } else {
+                J("#detail-id").val(dbinfo.id);
+                J("#detail-ip").val(dbinfo.ip);
+                J("#detail-port").val(dbinfo.port);
+                J("#detail-dbName").val(dbinfo.dbName);
+                J("#detail-createBy").val(dbinfo.createBy);
+                J("#detail-creationDate").val(dbinfo.creationDate);
+                J("#detail-modifiedBy").val(dbinfo.modifiedBy);
+                J("#detail-modificationDate").val(dbinfo.modificationDate);
+                if (isUpdate == "true") {
+                    messageObj.text("保存信息成功!");
+                }
+            }
+            messageObj.show();
+        };
+        //更新数据库信息
+        J("#updateInfo").click(function (e) {
+            e.preventDefault();
+            var params = {};
+            //拼装数据
+            J("#update-form").find("select,input[type=text],input[type=datetime]").each(function (index) {
+                params[J(this).attr("name")] = J(this).val();
+            })
+            J.ajax({
+                type: "POST",
+                url: "../dbinfo/update.json",
+                data: params,
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    //设置信息
+                    putInfo(jqXHR, "true");
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    var message = J("#db-update-message");
+                    showErrorMessage(message, xhr);
+                }
+            });
+        });
+        //删除数据库信息
+        J("#insert-form").on("click", "button[class-data=J-delete]", function(e){
+            e.preventDefault();
+            var tr=J(this).parents("tr");
+            var dbInfoId = tr.children().eq(0).text();
+            if(confirm("确定要删除该条信息?")){
+                J.ajax({
+                    url: '../dbinfo/delete.json',
+                    data: "id="+dbInfoId,
+                    type: "POST",
+                    dataType:"json",
+                    contentType:"application/x-www-form-urlencoded;charset=UTF-8",
+                    success: function(data, textStatus, jqXHR){
+                        var error = J.parseJSON(jqXHR.responseText).error;
+                        var messageObj = J("#db-handle-message");
+                        if (error) {
+                            showErrorMessage(messageObj, error);
+                        }else{
+                            messageObj.text('删除信息成功!');
+                            tr.remove();
+                        }
+
+                    },
+                    error:function(xhr,textStatus){
+                        J("#db-handle-message").text('删除信息失败!');
+                    }
+                });
+
+            }
+        });
+        //清空表单信息
+        function resetForm() {
+            J("#db-update-message").text("");
+            J("#db-update-message").removeClass("text-danger glyphicon glyphicon-remove");
+            J("#res").click();
+        }
+
+        //展示错误信息
+        function showErrorMessage(obj, message) {
+            obj.html(message);
+            obj.addClass("text-danger glyphicon glyphicon-remove");
+        }
+    });
+</script>

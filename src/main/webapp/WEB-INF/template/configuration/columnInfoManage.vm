@@ -1,0 +1,287 @@
+<h3 class="page-header">切分键信息</h3>
+<form class="form-horizontal" id="insert-form" role="form" action="../columninfo/query" method="post">
+    <div class="row placeholders">
+        <div class="form-group">
+            <label for="splittingKeyId" class="col-sm-2 control-label">切分键名称</label>
+
+            <div class="col-sm-2">
+                <select class="form-control" id="splittingKeyId" name="splittingKeyId">
+                    <option></option>
+                    #if($!splittingKeyVOList)
+                        #foreach($splittingKey in $!splittingKeyVOList)
+                            <option value="$!{splittingKey.id}">
+                               [$!{splittingKey.id}]$!{splittingKey.splitName}
+                            </option>
+                        #end
+                    #end
+                </select>
+            </div>
+            <label for="clusterId" class="col-sm-2 control-label">集群名称</label>
+            <div class="col-sm-2">
+                <select class="form-control" id="clusterId" name="clusterId">
+                    <option></option>
+                    #if($!dbClusterVOList)
+                        #foreach($dbcluster in $!dbClusterVOList)
+                            <option value="$!{dbcluster.id}">
+                                [$!{dbcluster.id}]$!{dbcluster.clusterName}
+                            </option>
+                        #end
+                    #end
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary glyphicon glyphicon-ok">
+                    查 询
+                </button>
+                <button type="button" class="btn btn-success glyphicon glyphicon-ok" id="addColumn"
+                        data-toggle="modal" data-target="#myModal">关联字段
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="text-success col-sm-offset-2 col-sm-10" id="handle-message">
+                #if( $!{message})
+                    $!{message}
+                #elseif($!{error})
+                    <p class="text-danger glyphicon glyphicon-remove">$!{error}</p>
+                #end
+            </div>
+        </div>
+
+    </div>
+    <h3 class="sub-header">映射字段信息</h3>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>表</th>
+                <th>字段</th>
+                <th>集群id</th>
+                <th>创建人</th>
+                <th>创建时间</th>
+                <th>修改人</th>
+                <th>修改时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+                #if($!columnInfoVOList&&$!columnInfoVOList.size()!=0)
+                    #foreach($columnInfo in $!columnInfoVOList)
+                    <tr>
+                        <td>$!{columnInfo.id}
+                            <input type="hidden" id="id" name="id" value="$!{columnInfo.id}">
+                        </td>
+                        <td>$!{columnInfo.tableName}</td>
+                        <td>$!{columnInfo.columnName}</td>
+                        <td>$!{columnInfo.clusterId}</td>
+                        <td>$!{columnInfo.createBy}</td>
+                        <td>$!{columnInfo.creationDate}</td>
+                        <td>$!{columnInfo.modifiedBy}</td>
+                        <td>$!{columnInfo.modificationDate}</td>
+                        <td>
+                            <button class-data="J-delete" class="btn btn-danger btn-sm">
+                                删除
+                            </button>
+                        </td>
+                    </tr>
+                    #end
+                #else
+                <tr>
+                    <td colspan="9">暂无数据!</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+</form>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="form-horizontal" id="update-form" role="form" action="" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">字段信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="id" class="col-sm-2 control-label">表名</label>
+
+                        <div class="col-sm-4">
+                            <select class="form-control"  id="tableName" name="tableName">
+                                #foreach($tableName in $!tableNameList)
+                                    <option value="$tableName">$tableName</option>
+                                #end
+                            </select>
+                        </div>
+                        <div class="col-sm-3 ">
+                            <button type="button" id="searchColumn" class="btn btn-primary glyphicon glyphicon-search">
+                                查 询
+                            </button>
+                        </div>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>选中</th>
+                            <th>字段名</th>
+                            <th>类型</th>
+                            <th>默认值</th>
+                            <th>允许为空</th>
+                        </tr>
+                        </thead>
+                        <tbody class="J-columnBody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <p id="db-update-message" hidden="hidden"></p>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+                    <button type="button" class="btn btn-primary" id="updateInfo">保 存</button>
+                    <button id="res" id="res" type="reset" hidden="hidden"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<table hidden="hidden" id="J-copy">
+    <tr>
+        <td><input type="checkbox" id="addDbInfoId" name="addDbInfoId"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+<script type="text/javascript">
+    var J = jQuery.noConflict();
+    J(document).ready(function () {
+        J("#clusterId").select2({
+            placeholder: "选择一个集群",
+            allowClear: true
+        });
+        J("#splittingKeyId").select2({
+            placeholder: "选择一个切分键",
+            allowClear: true
+        });
+        J("#tableName").select2({
+            placeholder: "选择一个表",
+            allowClear: true
+        });
+        J("#searchColumn").click(function (e) {
+            e.preventDefault();
+            var dataObj = J("#tableName").val();
+            J.ajax({
+                url: '../columninfo/querycolunm.json',
+                data: "tableName="+dataObj,
+                type: "POST",
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                success: function (data, textStatus, jqXHR) {
+                    var error = J.parseJSON(jqXHR.responseText).error;
+                    var columnInfo = J.parseJSON(jqXHR.responseText).fieldVOList;
+                    if (error) {
+                        alert(error);
+                    } else {
+                        showColumnInfo(columnInfo);
+                    }
+                },
+                error: function (xhr, textStatus) {
+                    alert('查询信息失败!');
+                }
+            });
+        });
+        function showColumnInfo(columnInfo) {
+            J(".J-columnBody").children("tr").each(function () {
+                J(this).remove();
+            })
+            var tr = J("#J-copy").find("tr");
+            for (i = 0; i < columnInfo.length; i++) {
+                tr.find("input").val(columnInfo[i].field);
+                tr.children().eq(1).text(columnInfo[i].field);
+                tr.children().eq(2).text(columnInfo[i].type);
+                tr.children().eq(3).text(columnInfo[i].defaultValue);
+                tr.children().eq(4).text(columnInfo[i].isNull);
+                tr.clone().appendTo(J(".J-columnBody"));
+            }
+        }
+
+        J("#updateInfo").click(function (e) {
+            e.preventDefault();
+            //拼装数据
+            var params = J("#update-form input[type=checkbox]:checked").map(function () {
+                return J(this).val();
+            }).get();
+            if (params.length == 0) {
+                alert("请选中需要保存的群组!");
+                return false;
+            }
+            var splittingKeyId = J("#splittingKeyId").val();
+            var clusterId = J("#clusterId").val();
+            var tableName = J("#tableName").val();
+            J.ajax({
+                url: '../columninfo/add.json',
+                data: "splittingKeyId=" + splittingKeyId +"&clusterId=" + clusterId + "&tableName=" + tableName + "&columns=" + params,
+                type: "POST",
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                success: function (data, textStatus, jqXHR) {
+                    var error = J.parseJSON(jqXHR.responseText).error;
+                    if (error) {
+                        alert(error);
+                    } else {
+                        alert("保存信息成功!");
+                    }
+                },
+                error: function (xhr, textStatus) {
+                    alert('保存信息失败!');
+                }
+            });
+        });
+        //删除信息
+        J("#insert-form").on("click", "button[class-data=J-delete]", function (e) {
+            e.preventDefault();
+            var tr = J(this).parents("tr");
+            var columnId = tr.find("#id").val();
+            if (confirm("确定要删除该信息?")) {
+                J.ajax({
+                    url: '../columninfo/delete.json',
+                    data: "id=" + columnId,
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                    success: function (data, textStatus, jqXHR) {
+                        var error = J.parseJSON(jqXHR.responseText).error;
+                        var messageObj = J("#handle-message");
+                        if (error) {
+                            showErrorMessage(messageObj, error);
+                        } else {
+                            messageObj.text('删除信息成功!');
+                            tr.remove();
+                        }
+
+                    },
+                    error: function (xhr, textStatus) {
+                        J("#handle-message").text('删除信息失败!');
+                    }
+                });
+            }
+        });
+        J("#addColumn").click(function (e) {
+            e.preventDefault();
+            if (J("#splittingKeyId").val()&&J("#clusterId").val()) {
+                return true;
+            } else {
+                alert("请先选择切分键和集群名称!");
+                return false;
+            }
+        });
+        //展示错误信息
+        function showErrorMessage(obj, message) {
+            obj.text(message);
+            obj.addClass("text-danger glyphicon glyphicon-remove");
+        }
+    });
+</script>

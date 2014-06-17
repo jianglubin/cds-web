@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyin.wycds.web.dal.datainterface.AppDAO">
+    <cache/>
+    <resultMap type="AppDO" id="appResultMap">
+        <id property="id" column="app_id"/>
+        <result property="appName" column="app_name"/>
+        <result property="owner" column="owner"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="attribute" column="attribute"/>
+        <result property="createBy" column="create_by"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="modifiedBy" column="modified_by"/>
+        <result property="modificationDate" column="modification_date"/>
+        <result property="deleteStatus" column="delete_status"/>
+    </resultMap>
+    <!-- 获取状态为"未删除"的所有应用信息 -->
+    <select id="getAppList" parameterType="com.wangyin.wycds.web.util.Paginator" resultType="AppDO"
+            resultMap="appResultMap">
+        select * from app where delete_status='false' order by app_id desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 获取状态为"未删除"的所有应用信息总数 -->
+    <select id="getAppListCount" resultType="Integer">
+        select count(app_id) from app where delete_status='false'
+    </select>
+    <!-- 根据组合条件查询应用信息-->
+    <select id="getAppAndClass" parameterType="map" resultType="AppDO" resultMap="appResultMap">
+        select * from app
+        <where>
+            delete_status='false'
+            <if test="appVO.appName!=null and appVO.appName!=''">and app_name=#{appVO.appName}</if>
+            <if test="appVO.phone!=null and appVO.phone!=''">and owner=#{appVO.phone}</if>
+            <if test="appVO.owner!=null and appVO.owner!=''">and owner like CONCAT(CONCAT('%', #{appVO.owner}),'%')</if>
+            <if test="appVO.email!=null and appVO.email!=''">and email=#{appVO.email}</if>
+        </where>
+        order by app_id desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 根据组合条件查询应用信息总数-->
+    <select id="getAppAndClassCount" parameterType="map" resultType="Integer">
+        select count(app_id) from app
+        <where>
+            delete_status='false'
+            <if test="appVO.appName!=null and appVO.appName!=''">and app_name like CONCAT(CONCAT('%',
+                #{appVO.appName}),'%')
+            </if>
+            <if test="appVO.phone!=null and appVO.phone!=''">and phone=#{appVO.phone}</if>
+            <if test="appVO.owner!=null and appVO.owner!=''">and owner like CONCAT(CONCAT('%', #{appVO.owner}),'%')</if>
+            <if test="appVO.email!=null and appVO.email!=''">and email=#{appVO.email}</if>
+        </where>
+    </select>
+    <!-- 根据id查询应用信息-->
+    <select id="getApp" parameterType="String" resultType="AppDO" resultMap="appResultMap">
+        select * from app where app_id=#{id}
+    </select>
+    <!-- 更新应用信息 -->
+    <update id="updateApp" parameterType="AppDO">
+        UPDATE app
+        <set>
+            <if test="appName!=null appName ip!=''">app_name=#{appName},</if>
+            <if test="owner!=null and owner!=''">owner=#{owner},</if>
+            <if test="phone!=null and phone!=''">phone=#{phone},</if>
+            <if test="email!=null and email!=''">email=#{email},</if>
+            <if test="attribute!=null and attribute!=''">attribute=#{email},</if>
+            <if test="modifiedBy!=null and modifiedBy!=''">modified_by=#{modifiedBy}</if>
+        </set>
+        <where>
+            app_id=#{id}
+        </where>
+    </update>
+    <!-- 删除应用信息 -->
+    <update id="deleteApp" parameterType="String">
+        UPDATE app set delete_status='true',modified_by=#{modifiedBy},modification_date=sysdate() where app_id=#{id}
+    </update>
+    <!-- 插入应用信息 -->
+    <insert id="insertApp" parameterType="AppDO" useGeneratedKeys="true">
+        INSERT INTO app
+        (`app_name`,
+        `owner`,
+        `phone`,
+        `email`,
+        `attribute`,
+        `create_by`,
+        `creation_date`,
+        `modification_date`,
+        `modified_By`)
+        VALUES
+        (#{appName},
+        #{owner},
+        #{phone},
+        #{email},
+        #{attribute},
+        #{createBy},
+        sysdate(),
+        sysdate(),
+        #{modifiedBy});
+    </insert>
+</mapper>

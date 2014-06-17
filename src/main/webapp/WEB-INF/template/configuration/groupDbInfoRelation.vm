@@ -1,0 +1,308 @@
+<h3 class="page-header">群组信息</h3>
+<form class="form-horizontal" id="insert-form" role="form" action="../dbinfogroup/query" method="post">
+    <div class="row placeholders">
+        <div class="form-group">
+            <label for="groupName" class="col-sm-2 control-label">群组名称</label>
+
+            <div class="col-sm-3">
+                <select class="form-control" id="groupName" name="groupId">
+                    <option></option>
+                    #if($!dbGroupVOList)
+                        #foreach($dbgroup in $!dbGroupVOList)
+                            <option value="$!{dbgroup.id}">
+                                [$!{dbgroup.id}]$!{dbgroup.groupName}
+                            </option>
+                        #end
+                    #end
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary glyphicon glyphicon-ok" id="queryGroup">
+                    查 询
+                </button>
+                <button type="button" class="btn btn-success glyphicon glyphicon-ok" id="addMaster"
+                        data-toggle="modal" data-target="#myModal">新增主库
+                </button>
+                <button type="button" class="btn btn-success glyphicon glyphicon-ok" id="addSlave"
+                        data-toggle="modal" data-target="#myModal">新增备库
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="text-success col-sm-offset-2 col-sm-10" id="handle-message">
+                #if( $!{message})
+                    $!{message}
+                #elseif($!{error})
+                    <p class="text-danger glyphicon glyphicon-remove">$!{error}</p>
+                #end
+            </div>
+        </div>
+
+    </div>
+    <h3 class="sub-header">关联数据库</h3>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>数据库名称</th>
+                <th>ip</th>
+                <th>端口</th>
+                <th>主/备库</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+                #if($!dbInfoDbGroupRelationServiceDbGroupList&&$!dbInfoDbGroupRelationServiceDbGroupList.size()!=0)
+                    #foreach($dbinfo in $!dbInfoDbGroupRelationServiceDbGroupList)
+                    <tr>
+                        <td>$!{dbinfo.id}
+                            <input type="hidden" id="id" name="id" value="$!{dbinfo.id}">
+                        </td>
+                        <td>$!{dbinfo.dbName}</td>
+                        <td>$!{dbinfo.ip}</td>
+                        <td>$!{dbinfo.port}</td>
+                        <td>
+                            #if($!{dbinfo.masterOrSlave}=="Master")
+                                主库
+                            #elseif($!{dbinfo.masterOrSlave}=="Slave")
+                                备库
+                            #end
+                        </td>
+                        <td>
+                            <button class-data="J-delete" class="btn btn-danger btn-sm">
+                                删除
+                            </button>
+                        </td>
+                    </tr>
+                    #end
+                #else
+                <tr>
+                    <td colspan="8">暂无数据!</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+</form>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="form-horizontal" id="update-form" role="form" action="" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">数据库信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="id" class="col-sm-1 control-label">数据库ID</label>
+
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="dbinfoId" name="id" value="">
+                            <input type="hidden" id="groupId" name="groupId">
+                            <input type="hidden" id="masterOrSlave" name="masterOrSlave">
+                        </div>
+                        <label for="ip" class="col-sm-1 control-label">数据库IP</label>
+
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="ip" name="ip" value="">
+                        </div>
+                        <label for="dbName" class="col-sm-1 control-label">数据库名称</label>
+
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="dbName" name="dbName" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3 col-sm-offset-5">
+                            <button type="button" id="searchGroup" class="btn btn-primary glyphicon glyphicon-search">
+                                查 询
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>选中</th>
+                                <th>id</th>
+                                <th>数据库名称</th>
+                                <th>ip</th>
+                                <th>端口</th>
+                            </tr>
+                            </thead>
+                            <tbody class="J-groupBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <p id="db-update-message" hidden="hidden"></p>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+                    <button type="button" class="btn btn-primary" id="updateInfo">保 存</button>
+                    <button id="res" id="res" type="reset" hidden="hidden"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<table hidden="hidden" id="J-copy">
+    <tr>
+        <td><input type="checkbox" id="addDbInfoId" name="addDbInfoId"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+<script type="text/javascript">
+    var J = jQuery.noConflict();
+    J(document).ready(function () {
+        J("#groupName").select2({
+            placeholder: "选择一个群组",
+            allowClear: true
+        });
+        J("#searchGroup").click(function (e) {
+            e.preventDefault();
+            var params = {};
+            //拼装数据
+            J("#update-form input[type=text],input[type=hidden]").each(function () {
+                params[J(this).attr("name")] = J(this).val();
+            })
+            J.ajax({
+                url: '../dbinfogroup/queryall.json',
+                data: params,
+                type: "POST",
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                success: function (data, textStatus, jqXHR) {
+                    var error = J.parseJSON(jqXHR.responseText).error;
+                    var dbinfo = J.parseJSON(jqXHR.responseText).dbInfoVOList;
+                    if (error) {
+                        alert(error);
+                    } else {
+                        showGroup(dbinfo);
+                    }
+                },
+                error: function (xhr, textStatus) {
+                    alert('查询信息失败!');
+                }
+            });
+        });
+        function showGroup(dbinfo) {
+            J(".J-groupBody").children("tr").each(function () {
+                J(this).remove();
+            })
+            var tr = J("#J-copy").find("tr");
+            for (i = 0; i < dbinfo.length; i++) {
+                tr.find("input").val(dbinfo[i].id);
+                tr.children().eq(1).text(dbinfo[i].id);
+                tr.children().eq(2).text(dbinfo[i].dbName);
+                tr.children().eq(3).text(dbinfo[i].ip);
+                tr.children().eq(4).text(dbinfo[i].port);
+                tr.clone().appendTo(J(".J-groupBody"));
+            }
+        }
+
+        J("#updateInfo").click(function (e) {
+            e.preventDefault();
+            //拼装数据
+            var params = J("#update-form input[type=checkbox]:checked").map(function () {
+                return J(this).val();
+            }).get();
+            if (params.length == 0) {
+                alert("请选中需要保存的群组!");
+                return false;
+            }
+            var groupId = J("#update-form #groupId").val();
+            var masterOrSlave = J("#masterOrSlave").val();
+            J.ajax({
+                url: '../dbinfogroup/add.json',
+                data: "groupId=" + groupId + "&masterOrSlave=" + masterOrSlave + "&dbInfoIds=" + params,
+                type: "POST",
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                success: function (data, textStatus, jqXHR) {
+                    var error = J.parseJSON(jqXHR.responseText).error;
+                    if (error) {
+                        alert(error);
+                    } else {
+                        J("#update-form input[type=checkbox]:checked").each(function (e) {
+                            J(this).parents("tr").remove();
+                        });
+                        alert("保存信息成功!");
+                    }
+                },
+                error: function (xhr, textStatus) {
+                    alert('保存信息失败!');
+                }
+            });
+        });
+        //删除信息
+        J("#insert-form").on("click", "button[class-data=J-delete]", function (e) {
+            e.preventDefault();
+            var tr = J(this).parents("tr");
+            var dbInfoId = tr.find("#id").val();
+            if (confirm("确定要删除该信息?")) {
+                J.ajax({
+                    url: '../dbinfogroup/delete.json',
+                    data: "id=" + dbInfoId,
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                    success: function (data, textStatus, jqXHR) {
+                        var error = J.parseJSON(jqXHR.responseText).error;
+                        var messageObj = J("#handle-message");
+                        if (error) {
+                            showErrorMessage(messageObj, error);
+                        } else {
+                            messageObj.text('删除信息成功!');
+                            tr.remove();
+                        }
+
+                    },
+                    error: function (xhr, textStatus) {
+                        J("#handle-message").text('删除信息失败!');
+                    }
+                });
+            }
+        });
+        J("#addMaster").click(function (e) {
+            e.preventDefault();
+            if (J("#groupName").val()) {
+                J("#update-form #groupId").val(J("#groupName").val());
+                J("#myModalLabel").text("新增主库");
+                J("#masterOrSlave").val("Master");
+                J(".J-groupBody").children("tr").each(function () {
+                    J(this).remove();
+                })
+            } else {
+                alert("请先选中一个群组!");
+                return false;
+            }
+        });
+        J("#addSlave").click(function (e) {
+            e.preventDefault();
+            if (J("#groupName").val()) {
+                J("#update-form #groupId").val(J("#groupName").val());
+                J("#myModalLabel").text("新增备库");
+                J("#masterOrSlave").val("Slave");
+                J(".J-groupBody").children("tr").each(function () {
+                    J(this).remove();
+                })
+            } else {
+                alert("请先选中一个群组!");
+                return false;
+            }
+        });
+        //展示错误信息
+        function showErrorMessage(obj, message) {
+            obj.text(message);
+            obj.addClass("text-danger glyphicon glyphicon-remove");
+        }
+    });
+</script>

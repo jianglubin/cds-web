@@ -1,0 +1,136 @@
+<h3 class="page-header">新增数据源信息</h3>
+<form class="form-horizontal" id="insert-form" role="form" action="../datasource/add" method="post">
+    <div class="row placeholders">
+        <div class="form-group">
+            <label for="name" class="col-sm-1 control-label">名称</label>
+
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="name" name="name" value="$!{dataSourceVO.name}">
+            </div>
+
+            <label for="checkoutTimeoutMilliSec" class="col-sm-2 control-label">等待超时时间</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="checkoutTimeoutMilliSec" name="checkoutTimeoutMilliSec"
+                       placeholder="1000" value="$!{dataSourceVO.checkoutTimeoutMilliSec}">
+            </div>
+
+            <label for="maxStatements" class="col-sm-2 control-label">池中最大普通语句数</label>
+
+            <div class="col-sm-1">
+                <input type="text" class="form-control" id="maxStatements" name="maxStatements" placeholder="100"
+                       value="$!{dataSourceVO.maxStatements}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="driver" class="col-sm-1 control-label">驱动</label>
+
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="driver" name="driver" placeholder="jdbc.driver.OracleDriver"
+                       value="$!{dataSourceVO.driver}">
+            </div>
+
+            <label for="verbose" class="col-sm-2 control-label">记录其他信息</label>
+
+            <div class="col-sm-2">
+                <select class="form-control" id="verbose" name="verbose"
+                        value="$!{dataSourceVO.verbose}">
+                    <option value="">请选择</option>
+                    <option value="true" #if(${dataSourceVO.verbose}=="true") selected #end>是
+                    </option>
+                    <option value="false" #if(${dataSourceVO.verbose}=="false") selected #end>否
+                    </option>
+                </select>
+            </div>
+            <label for="idleTimeoutSec" class="col-sm-2 control-label">连接最大空闲时间</label>
+
+            <div class="col-sm-1">
+                <input type="text" class="form-control" id="idleTimeoutSec" name="idleTimeoutSec" placeholder="300"
+                       value="$!{dataSourceVO.idleTimeoutSec}">
+            </div>
+        </div>
+        <div class="form-group">
+
+            <label for="url" class="col-sm-1 control-label">连接URL</label>
+
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="url" name="url"
+                       placeholder="jdbc:mysql://localhost:3306/mydb"
+                       value="$!{dataSourceVO.url}">
+            </div>
+            <label for="printSql" class="col-sm-2 control-label">记录Sql执行信息</label>
+
+            <div class="col-sm-2">
+                <select class="form-control" id="printSql" name="printSql"
+                        value="$!{dataSourceVO.printSql}">
+                    <option value="">请选择</option>
+                    <option value="true" #if(${dataSourceVO.printSql}=="true") selected #end>是
+                    </option>
+                    <option value="false" #if(${dataSourceVO.printSql}=="false") selected #end>否
+                    </option>
+                </select>
+            </div>
+            <label for="maxPreStatements" class="col-sm-2 control-label">池中最大预编译语句数</label>
+
+            <div class="col-sm-1">
+                <input type="text" class="form-control" id="maxPreStatements" name="maxPreStatements" placeholder="10"
+                       value="$!{dataSourceVO.maxPreStatements}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="userName" class="col-sm-1 control-label">用户名</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="userName" name="userName" placeholder="root"
+                       value="$!{dataSourceVO.userName}">
+            </div>
+            <label for="passWord" class="col-sm-1 control-label">密码</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="passWord" name="passWord" placeholder="123456"
+                       value="$!{dataSourceVO.passWord}">
+            </div>
+            <label for="maxConnections" class="col-sm-2 control-label">最大连接数</label>
+
+            <div class="col-sm-1">
+                <input type="text" class="form-control" id="maxConnections" name="maxConnections"
+                       placeholder="10" value="$!{dataSourceVO.maxConnections}">
+            </div>
+            <label for="minConnections" class="col-sm-2 control-label">最小连接数</label>
+
+            <div class="col-sm-1">
+                <input type="text" class="form-control" id="minConnections" name="minConnections"
+                       value="$!{dataSourceVO.minConnections}" placeholder="0">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="connectionInfo" class="col-sm-2 control-label">驱动支持的其他参数</label>
+
+            <div class="col-sm-4">
+                <textarea class="form-control" rows="5" class="form-control" id="connectionInfo" name="connectionInfo"
+                          placeholder="defaultRowPrefetch=20&defaultBatchValue=20">$!{dataSourceVO.connectionInfo}</textarea>
+            </div>
+            <label for="checkStatement" class="col-sm-2 control-label">检测连接是否可用的查询语句</label>
+
+            <div class="col-sm-4">
+                <textarea class="form-control" rows="5" cclass="form-control" id="checkStatement" name="checkStatement"
+                          placeholder="select now()">$!{dataSourceVO.checkStatement}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="text-success col-sm-offset-2 col-sm-10" id="db-handle-message">
+                #if( $!{message})
+                    $!{message}
+                #elseif($!{error})
+                    <p class="text-danger glyphicon glyphicon-remove">$!{error}</p>
+                #end
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success glyphicon glyphicon-ok" id="addDb">新 增</button>
+                <button type="reset" class="btn btn-primary glyphicon glyphicon-search" id="queryDb">重 置</button>
+            </div>
+        </div>
+    </div>
+</form>
