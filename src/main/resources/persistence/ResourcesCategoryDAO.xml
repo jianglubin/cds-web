@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyin.wycds.web.dal.datainterface.ResourcesCategoryDAO">
+    <cache/>
+    <resultMap type="ResourcesCategoryDO" id="categoryResultMap">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="modifiedBy" column="modified_by"/>
+        <result property="modificationDate" column="modification_date"/>
+        <result property="deleteStatus" column="delete_status"/>
+    </resultMap>
+    <!-- 根据id查询类目信息 -->
+    <select id="getCategoryById" resultMap="categoryResultMap" parameterType="String">
+        select * from resources_category where id=#{id} and delete_status='false'
+    </select>
+    <!-- 根据父类id包含的子类目信息-->
+    <select id="getCategoryByParentId" parameterType="String" resultType="ResourcesCategoryDO" resultMap="categoryResultMap">
+        select * from resources_category where parent_id=#{parentId} and delete_status='false'
+    </select>
+    <!-- 更新类目信息 -->
+    <update id="updateCategory" parameterType="ResourcesCategoryDO">
+        UPDATE resources_category
+        <set>
+            <if test="name!=null and name!=''">name=#{name},</if>
+            <if test="parentId!=null and parentId!=''">parent_id=#{parentId},</if>
+            <if test="createBy!=null and createBy!=''">create_by=#{createBy},</if>
+            creation_date=sysdate()
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+    <!-- 删除类目信息 -->
+    <update id="deleteCategory" parameterType="String">
+        UPDATE resources_category set delete_status='true',modified_by=#{modifiedBy},modification_date=sysdate() where department_id=#{id}
+    </update>
+    <!-- 插入类目信息 -->
+    <insert id="insertCategory" parameterType="ResourcesCategoryDO" useGeneratedKeys="true">
+        INSERT INTO resources_category
+        (`name`,
+        `parent_id`,
+        `create_by`,
+        `creation_date`,
+        `modification_date`,
+        `modified_By`)
+        VALUES
+        (#{name},
+        #{parentId},
+        #{createBy},
+        sysdate(),
+        sysdate(),
+        #{modifiedBy);
+    </insert>
+</mapper>

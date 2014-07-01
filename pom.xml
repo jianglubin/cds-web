@@ -207,7 +207,7 @@
         <finalName>wangyin-wycds-web</finalName>
         <resources>
             <resource>
-                <directory>src/main/java</directory>
+                <directory>src/main/resources</directory>
             </resource>
         </resources>
         <plugins>

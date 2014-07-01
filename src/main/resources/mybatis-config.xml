@@ -7,6 +7,7 @@
         <typeAlias alias="DbMonitorDO" type="com.wangyin.wycds.web.dal.dataobject.DbMonitorDO"/>
         <typeAlias alias="DbMonitorInstanceDO" type="com.wangyin.wycds.web.dal.dataobject.DbMonitorInstanceDO"/>
         <typeAlias alias="DbEventDO" type="com.wangyin.wycds.web.dal.dataobject.DbEventDO"/>
+        <typeAlias alias="ResourcesCategoryDO" type="com.wangyin.wycds.web.dal.dataobject.ResourcesCategoryDO"/>
         <typeAlias alias="DbGroupDO" type="com.wangyin.wycds.web.dal.dataobject.DbGroupDO"/>
         <typeAlias alias="DbClusterDO" type="com.wangyin.wycds.web.dal.dataobject.DbClusterDO"/>
         <typeAlias alias="DataSourceDO" type="com.wangyin.wycds.web.dal.dataobject.DataSourceDO"/>
@@ -19,20 +20,21 @@
         <typeAlias alias="AppDO" type="com.wangyin.wycds.web.dal.dataobject.AppDO"/>
     </typeAliases>
     <mappers>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbInfoDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbHostGroupDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbMonitorDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbMonitorInstanceDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbEventDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbGroupDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbClusterDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/DataSourceDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbClusterDbGroupRelationDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbInfoDbGroupRelationDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/SplittingKeyDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/ColumnInfoDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/DepotsTableRulesDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/SplittingKeyRuleRelationDAO.xml"/>
-        <mapper resource="com/wangyin/wycds/web/dal/persistence/AppDAO.xml"/>
+        <mapper resource="/persistence/DbInfoDAO.xml"/>
+        <mapper resource="/persistence/DbHostGroupDAO.xml"/>
+        <mapper resource="/persistence/DbMonitorDAO.xml"/>
+        <mapper resource="/persistence/DbMonitorInstanceDAO.xml"/>
+        <mapper resource="/persistence/DbEventDAO.xml"/>
+        <mapper resource="/persistence/ResourcesCategoryDAO.xml"/>
+        <mapper resource="/persistence/DbGroupDAO.xml"/>
+        <mapper resource="/persistence/DbClusterDAO.xml"/>
+        <mapper resource="/persistence/DataSourceDAO.xml"/>
+        <mapper resource="/persistence/DbClusterDbGroupRelationDAO.xml"/>
+        <mapper resource="/persistence/DbInfoDbGroupRelationDAO.xml"/>
+        <mapper resource="/persistence/SplittingKeyDAO.xml"/>
+        <mapper resource="/persistence/ColumnInfoDAO.xml"/>
+        <mapper resource="/persistence/DepotsTableRulesDAO.xml"/>
+        <mapper resource="/persistence/SplittingKeyRuleRelationDAO.xml"/>
+        <mapper resource="/persistence/AppDAO.xml"/>
     </mappers>
 </configuration>
