@@ -65,4 +65,13 @@ public class BaseController {
         //TODO
         // return "蒋鲁宾";
     }
+
+    /**
+     * 获取目前系统登录用户,以后从session中获取,现阶段写死
+     *
+     * @return
+     */
+    protected String getUser() {
+        return "蒋鲁宾";
+    }
 }

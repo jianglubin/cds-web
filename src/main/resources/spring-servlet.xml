@@ -70,6 +70,5 @@
 
     <!-- 静态资源-->
     <mvc:resources mapping="/html/**" location="/html/" />
-    <mvc:resources mapping="/media/**" location="/media/" />
 
 </beans>

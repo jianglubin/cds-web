@@ -32,6 +32,13 @@ public interface DbInfoDAO {
     public List<DbInfoDO> getDbInfoList(Paginator paginator);
 
     /**
+     * 查询组下所有数据库信息
+     * @param groupId
+     * @return
+     */
+    public List<DbInfoDO> getDbInfoByGroupId(String groupId);
+
+    /**
      * 获取状态为"未删除"的所有数据库信息的总数
      *
      * @return

@@ -5,8 +5,6 @@
 package com.wangyin.biz.test;
 
 import com.wangyin.wycds.web.biz.ParseDDLService;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.ProcessEngines;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -28,7 +26,6 @@ public class JDBC_Test {
         //System.out.println(ddl.getTableName("alter table test change bbb aaa varchar(10)"));
         //getAllField("rdatasourceapp");
         addColumn();
-        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
     }
 
     public static void addColumn() {

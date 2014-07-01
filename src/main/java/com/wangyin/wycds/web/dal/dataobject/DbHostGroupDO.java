@@ -7,41 +7,26 @@ package com.wangyin.wycds.web.dal.dataobject;
 import java.io.Serializable;
 
 /**
- * 数据库信息DO对象
- *
+ * 监控组DO
  * @author 蒋鲁宾
- * @version v 0.1 2014/4/30 13:27 Exp $$
+ * @version v 0.1 2014/6/25 17:11 Exp $$
  */
-public class DbInfoDO implements Serializable {
+public class DbHostGroupDO implements Serializable {
+
     /**
      * serialVersionUID
      */
-    private static final long serialVersionUID = 8305608303297348317L;
+    private static final long serialVersionUID = -4382174480017348081L;
     /**
-     * 数据库ID
+     * 群组id
      */
     private String id;
-    /**
-     * 数据库地址
-     */
-    private String ip;
-    /**
-     * 数据库端口
-     */
-    private String port;
-    /**
-     * MySQL服务器ServerId
-     */
-    private String serverId;
-    /**
-     * 监控组id
-     */
-    private String groupId;
 
     /**
-     * 主备类型
+     * 群组名称
      */
-    private String masterOrSlave;
+    private String groupName;
+
     /**
      * 数据库类型
      */
@@ -75,52 +60,12 @@ public class DbInfoDO implements Serializable {
         this.id = id;
     }
 
-    public String getIp() {
-        return ip;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public String getPort() {
-        return port;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
-    }
-
-    public String getServerId() {
-        return serverId;
-    }
-
-    public void setServerId(String serverId) {
-        this.serverId = serverId;
-    }
-
-    public String getMasterOrSlave() {
-        return masterOrSlave;
-    }
-
-    public void setMasterOrSlave(String masterOrSlave) {
-        this.masterOrSlave = masterOrSlave;
-    }
-
-    public String getDbType() {
-        return dbType;
-    }
-
-    public void setDbType(String dbType) {
-        this.dbType = dbType;
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     public String getCreateBy() {
@@ -161,5 +106,13 @@ public class DbInfoDO implements Serializable {
 
     public void setDeleteStatus(String deleteStatus) {
         this.deleteStatus = deleteStatus;
+    }
+
+    public String getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
     }
 }

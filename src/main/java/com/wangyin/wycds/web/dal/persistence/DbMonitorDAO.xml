@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyin.wycds.web.dal.datainterface.DbMonitorDAO">
+    <cache/>
+    <resultMap type="DbMonitorDO" id="dbMonitorResultMap">
+        <id property="id" column="id"/>
+        <result property="groupId" column="db_monitor_group_Id"/>
+        <result property="item" column="monitor_item"/>
+        <result property="itemDesc" column="monitor_item_desc"/>
+        <result property="dbType" column="db_type"/>
+        <result property="scriptType" column="monitor_script_type"/>
+        <result property="scriptPath" column="monitor_script_path"/>
+        <result property="checkInterval" column="check_interval"/>
+        <result property="errorNumUpper" column="error_num_upper"/>
+        <result property="checkTimes" column="check_times"/>
+        <result property="thresholdUpper" column="threshold_upper"/>
+        <result property="thresholdLower" column="threshold_lower"/>
+        <result property="power" column="power"/>
+        <result property="createBy" column="create_by"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="modifiedBy" column="modified_by"/>
+        <result property="modificationDate" column="modification_date"/>
+        <result property="deleteStatus" column="delete_status"/>
+    </resultMap>
+    <!-- 获取状态为"未删除"的所有监控项信息 -->
+    <select id="getDbMonitorList" parameterType="com.wangyin.wycds.web.util.Paginator" resultType="DbMonitorDO"
+            resultMap="dbMonitorResultMap">
+        select * from db_monitor order by id desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 获取状态为"未删除"的所有监控项信息总数 -->
+    <select id="getDbMonitorListCount" resultType="Integer">
+        select count(id) from db_monitor where delete_status='false'
+    </select>
+    <!-- 根据组合条件查询监控项信息-->
+    <select id="getDbMonitorAndClass" parameterType="map" resultType="DbMonitorDO" resultMap="dbMonitorResultMap">
+        select * from db_monitor
+        <where>
+            <if test="dbMonitorVO.item!=null and dbMonitorVO.item!=''">and monitor_item=#{dbMonitorVO.item}</if>
+            <if test="dbMonitorVO.itemDesc!=null and dbMonitorVO.itemDesc!=''">and monitor_item_desc=#{dbMonitorVO.itemDesc}</if>
+            <if test="dbMonitorVO.groupId!=null and dbMonitorVO.groupId!=''">and db_monitor_group_id=#{dbMonitorVO.groupId}</if>
+            <if test="dbMonitorVO.scriptType!=null and dbMonitorVO.scriptType!=''">and monitor_script_type=#{dbMonitorVO.scriptType}</if>
+            <if test="dbMonitorVO.scriptPath!=null and dbMonitorVO.scriptPath!=''">and monitor_script_path=#{dbMonitorVO.scriptPath}</if>
+            <if test="dbMonitorVO.checkInterval!=null and dbMonitorVO.checkInterval!=''">and check_interval=#{dbMonitorVO.checkInterval}</if>
+            <if test="dbMonitorVO.errorNumUpper!=null and dbMonitorVO.errorNumUpper!=''">and error_num_upper=#{dbMonitorVO.errorNumUpper}</if>
+            <if test="dbMonitorVO.checkTimes!=null and dbMonitorVO.checkTimes!=''">and check_times=#{dbMonitorVO.checkTimes}</if>
+            <if test="dbMonitorVO.thresholdUpper!=null and dbMonitorVO.thresholdUpper!=''">and threshold_upper=#{dbMonitorVO.thresholdUpper}</if>
+            <if test="dbMonitorVO.thresholdLower!=null and dbMonitorVO.thresholdLower!=''">and threshold_lower=#{dbMonitorVO.thresholdLower}</if>
+            <if test="dbMonitorVO.power!=null and dbMonitorVO.power!=''">and power=#{dbMonitorVO.power}</if>
+        </where>
+        order by id desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 根据组合条件查询监控项信息总数-->
+    <select id="getDbMonitorAndClassCount" parameterType="map" resultType="Integer">
+        select count(id) from db_monitor
+        <where>
+            <if test="dbMonitorVO.item!=null and dbMonitorVO.item!=''">and monitor_item=#{dbMonitorVO.item}</if>
+            <if test="dbMonitorVO.itemDesc!=null and dbMonitorVO.itemDesc!=''">and monitor_item_desc=#{dbMonitorVO.itemDesc}</if>
+            <if test="dbMonitorVO.groupId!=null and dbMonitorVO.groupId!=''">and db_monitor_group_id=#{dbMonitorVO.groupId}</if>
+            <if test="dbMonitorVO.scriptType!=null and dbMonitorVO.scriptType!=''">and monitor_script_type=#{dbMonitorVO.scriptType}</if>
+            <if test="dbMonitorVO.scriptPath!=null and dbMonitorVO.scriptPath!=''">and monitor_script_path=#{dbMonitorVO.scriptPath}</if>
+            <if test="dbMonitorVO.checkInterval!=null and dbMonitorVO.checkInterval!=''">and check_interval=#{dbMonitorVO.checkInterval}</if>
+            <if test="dbMonitorVO.errorNumUpper!=null and dbMonitorVO.errorNumUpper!=''">and error_num_upper=#{dbMonitorVO.errorNumUpper}</if>
+            <if test="dbMonitorVO.checkTimes!=null and dbMonitorVO.checkTimes!=''">and check_times=#{dbMonitorVO.checkTimes}</if>
+            <if test="dbMonitorVO.thresholdUpper!=null and dbMonitorVO.thresholdUpper!=''">and threshold_upper=#{dbMonitorVO.thresholdUpper}</if>
+            <if test="dbMonitorVO.thresholdLower!=null and dbMonitorVO.thresholdLower!=''">and threshold_lower=#{dbMonitorVO.thresholdLower}</if>
+            <if test="dbMonitorVO.power!=null and dbMonitorVO.power!=''">and power=#{dbMonitorVO.power}</if>
+        </where>
+    </select>
+    <!-- 根据组合条件查询监控项信息,无分页-->
+    <select id="getDbMonitorAndClassNoPaginator" parameterType="map" resultType="DbMonitorDO" resultMap="dbMonitorResultMap">
+        select * from db_monitor
+        <where>
+            <if test="dbMonitorVO.item!=null and dbMonitorVO.item!=''">and monitor_item=#{dbMonitorVO.item}</if>
+            <if test="dbMonitorVO.itemDesc!=null and dbMonitorVO.itemDesc!=''">and monitor_item_desc=#{dbMonitorVO.itemDesc}</if>
+            <if test="dbMonitorVO.groupId!=null and dbMonitorVO.groupId!=''">and db_monitor_group_id=#{dbMonitorVO.groupId}</if>
+            <if test="dbMonitorVO.scriptType!=null and dbMonitorVO.scriptType!=''">and monitor_script_type=#{dbMonitorVO.scriptType}</if>
+            <if test="dbMonitorVO.scriptPath!=null and dbMonitorVO.scriptPath!=''">and monitor_script_path=#{dbMonitorVO.scriptPath}</if>
+            <if test="dbMonitorVO.checkInterval!=null and dbMonitorVO.checkInterval!=''">and check_interval=#{dbMonitorVO.checkInterval}</if>
+            <if test="dbMonitorVO.errorNumUpper!=null and dbMonitorVO.errorNumUpper!=''">and error_num_upper=#{dbMonitorVO.errorNumUpper}</if>
+            <if test="dbMonitorVO.checkTimes!=null and dbMonitorVO.checkTimes!=''">and check_times=#{dbMonitorVO.checkTimes}</if>
+            <if test="dbMonitorVO.thresholdUpper!=null and dbMonitorVO.thresholdUpper!=''">and threshold_upper=#{dbMonitorVO.thresholdUpper}</if>
+            <if test="dbMonitorVO.thresholdLower!=null and dbMonitorVO.thresholdLower!=''">and threshold_lower=#{dbMonitorVO.thresholdLower}</if>
+            <if test="dbMonitorVO.power!=null and dbMonitorVO.power!=''">and power=#{dbMonitorVO.power}</if>
+        </where>
+        order by id desc
+    </select>
+    <!-- 根据id查询监控项信息-->
+    <select id="getDbMonitor" parameterType="String" resultType="DbMonitorDO" resultMap="dbMonitorResultMap">
+        select * from db_monitor where id=#{id}
+    </select>
+    <!-- 更新监控项信息 -->
+    <update id="updateDbMonitor" parameterType="DbMonitorDO">
+        UPDATE db_monitor
+        <set>
+            <if test="item!=null and item!=''">monitor_item=#{item},</if>
+            <if test="itemDesc!=null and itemDesc!=''">monitor_item_desc=#{itemDesc},</if>
+            <if test="groupId!=null and groupId!=''">db_monitor_group_id=#{groupId},</if>
+            <if test="scriptType!=null and scriptType!=''">monitor_script_type=#{scriptType},</if>
+            <if test="scriptPath!=null and scriptPath!=''">monitor_script_path=#{scriptPath},</if>
+            <if test="checkInterval!=null and checkInterval!=''">check_interval=#{checkInterval},</if>
+            <if test="errorNumUpper!=null and errorNumUpper!=''">error_num_upper=#{errorNumUpper},</if>
+            <if test="checkTimes!=null and checkTimes!=''">check_times=#{checkTimes},</if>
+            <if test="thresholdUpper!=null and thresholdUpper!=''">threshold_upper=#{thresholdUpper},</if>
+            <if test="thresholdLower!=null and thresholdLower!=''">threshold_lower=#{thresholdLower},</if>
+            <if test="power!=null and power!=''">power=#{power},</if>
+            <if test="modifiedBy!=null and modifiedBy!=''">modified_by=#{modifiedBy},</if>
+            modification_date=sysdate()
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+    <!-- 更新监控项状态信息 -->
+    <update id="udpateStatus" parameterType="String">
+        UPDATE db_monitor set delete_status=#{status},modified_by=#{modifiedBy},modification_date=sysdate() where id=#{id}
+    </update>
+    <!-- 插入监控项信息 -->
+    <insert id="insertDbMonitor" parameterType="DbMonitorDO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO db_monitor
+        (`db_monitor_group_Id`,
+        `monitor_item`,
+        `monitor_item_desc`,
+        `monitor_script_type`,
+        `monitor_script_path`,
+        `check_interval`,
+        `error_num_upper`,
+        `check_times`,
+        <if test="thresholdUpper!=null and thresholdUpper!=''">`threshold_upper`,</if>
+        <if test="thresholdLower!=null and thresholdLower!=''">`threshold_lower`,</if>
+        `power`,
+        `create_by`,
+        `creation_date`,
+        `modification_date`,
+        `modified_By`)
+        VALUES
+        (#{groupId},
+        #{item},
+        #{itemDesc},
+        #{scriptType},
+        #{scriptPath},
+        #{checkInterval},
+        #{errorNumUpper},
+        #{checkTimes},
+        <if test="thresholdUpper!=null and thresholdUpper!=''">#{thresholdUpper},</if>
+        <if test="thresholdLower!=null and thresholdLower!=''">#{thresholdLower},</if>
+        #{power},
+        #{createBy},
+        sysdate(),
+        sysdate(),
+        #{modifiedBy});
+    </insert>
+</mapper>

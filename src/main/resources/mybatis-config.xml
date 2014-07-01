@@ -3,6 +3,10 @@
 <configuration>
     <typeAliases>
         <typeAlias alias="DbInfoDO" type="com.wangyin.wycds.web.dal.dataobject.DbInfoDO"/>
+        <typeAlias alias="DbHostGroupDO" type="com.wangyin.wycds.web.dal.dataobject.DbHostGroupDO"/>
+        <typeAlias alias="DbMonitorDO" type="com.wangyin.wycds.web.dal.dataobject.DbMonitorDO"/>
+        <typeAlias alias="DbMonitorInstanceDO" type="com.wangyin.wycds.web.dal.dataobject.DbMonitorInstanceDO"/>
+        <typeAlias alias="DbEventDO" type="com.wangyin.wycds.web.dal.dataobject.DbEventDO"/>
         <typeAlias alias="DbGroupDO" type="com.wangyin.wycds.web.dal.dataobject.DbGroupDO"/>
         <typeAlias alias="DbClusterDO" type="com.wangyin.wycds.web.dal.dataobject.DbClusterDO"/>
         <typeAlias alias="DataSourceDO" type="com.wangyin.wycds.web.dal.dataobject.DataSourceDO"/>
@@ -16,6 +20,10 @@
     </typeAliases>
     <mappers>
         <mapper resource="com/wangyin/wycds/web/dal/persistence/DbInfoDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbHostGroupDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbMonitorDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbMonitorInstanceDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbEventDAO.xml"/>
         <mapper resource="com/wangyin/wycds/web/dal/persistence/DbGroupDAO.xml"/>
         <mapper resource="com/wangyin/wycds/web/dal/persistence/DbClusterDAO.xml"/>
         <mapper resource="com/wangyin/wycds/web/dal/persistence/DataSourceDAO.xml"/>

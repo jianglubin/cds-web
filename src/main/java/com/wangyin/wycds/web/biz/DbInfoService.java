@@ -4,11 +4,11 @@
  */
 package com.wangyin.wycds.web.biz;
 
+import com.wangyin.wycds.web.controller.vo.DbInfoVO;
 import com.wangyin.wycds.web.dal.datainterface.DbInfoDAO;
 import com.wangyin.wycds.web.dal.dataobject.DbInfoDO;
 import com.wangyin.wycds.web.util.DbInfoUtil;
 import com.wangyin.wycds.web.util.Paginator;
-import com.wangyin.wycds.web.controller.vo.DbInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,4 +63,5 @@ public class DbInfoService {
     public boolean deleteDbInfo(String id,String modifiedBy) {
         return DbInfoUtil.checkIsOne(dbInfoDAO.deleteDbInfo(id,modifiedBy));
     }
+
 }

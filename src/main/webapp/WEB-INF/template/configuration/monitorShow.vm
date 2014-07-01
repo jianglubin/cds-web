@@ -1,0 +1,163 @@
+<script src="../html/js/highstock.js"></script>
+<script src="../html/js/exporting.js"></script>
+<script src="../html/js/highstock-theme.js"></script>
+<script>
+    $(document).ready(function () {
+        var seriesOptions = [],
+                yAxisOptions = [],
+                seriesCounter = 0,
+                items = new Array(),
+                colors = Highcharts.getOptions().colors;
+        $("#monitorItem option").each(function () { //遍历全部option
+            var txt = $(this).val(); //获取option的内容
+            if (txt != "全部指标") //如果不是“”
+                items.push(txt); //添加到数组中
+        });
+        $("#monitorItem").change(function () {
+            var value = $("#monitorItem").val();
+            if (value != "全部指标") {
+                seriesOptions = [];
+                $.getJSON('../monitor/allInstance/' + value.toLowerCase(), function (data) {
+                    seriesOptions[0] = {
+                        name: value,
+                        data: data
+                    };
+                    // As we're loading the data asynchronously, we don't know what order it will arrive. So
+                    // we keep a counter and create the chart when all the data is loaded.
+                    createChart(value,true);
+                });
+            }
+        });
+        $.each(items, function (i, item) {
+            $.getJSON('../monitor/allInstance/' + item.toLowerCase(), function (data) {
+                seriesOptions[i] = {
+                    name: item,
+                    data: data
+                };
+                // As we're loading the data asynchronously, we don't know what order it will arrive. So
+                // we keep a counter and create the chart when all the data is loaded.
+                seriesCounter++;
+
+                if (seriesCounter == items.length) {
+                    createChart(item,false);
+                }
+            });
+        });
+        function createChart(item,isRedraw) {
+
+            var chart=Highcharts.StockChart({
+                credits: {
+                    href: 'https://www.wangyin.com/',
+                    text: '网银在线'
+                },
+                lang: {
+                    months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                    shortMonths: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一', '十二'],
+                    weekdays: ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+                    exportButtonTitle: '导出PDF',
+                    printButtonTitle: '打印报表'
+                },
+                chart: {
+                    renderTo: 'container',//指向的div的id属性
+                    events: {
+                        load: function () {
+                            // set up the updating of the chart each second
+                            var series = this.series[0];
+                            setInterval(function () {
+                                jQuery.getJSON('../monitor/newInstance/' + item + "/5", null, function (data) {
+                                    if (data != null) {
+                                        //为图表设置值
+                                        $.each(data, function (index, value) {
+                                            series.addPoint([value[0], value[1]], true, false);
+                                        });
+                                    }
+                                });
+                            }, 2000);
+                        }
+                    }
+                },
+                exporting: {
+                    enabled: false //是否能导出趋势图图片
+                },
+                title: {
+                    text: ''//图表标题
+                },
+                xAxis: {
+                    tickPixelInterval: 400,//x轴上的间隔
+                    //  title :{
+                    //      text:"title"
+                    //  },
+                    type: 'datetime', //定义x轴上日期的显示格式
+                    labels: {
+                        formatter: function () {
+                            var vDate = new Date(this.value);
+                            //alert(this.value);
+                            return vDate.getFullYear() + "年-" + (vDate.getMonth() + 1) + "月-" + vDate.getDate() + "日";
+                        },
+                        align: 'center'
+                    },
+                },
+                yAxis: {
+
+                    title: {
+                        text: '使用率'  //y轴上的标题
+                    }
+                },
+                tooltip: {
+                    xDateFormat: '%Y-%m-%d, %A'//鼠标移动到趋势线上时显示的日期格式
+                },
+                rangeSelector: {
+                    buttons: [
+                        {
+                            type: 'month',
+                            count: 1,
+                            text: '1月'
+                        },
+                        {
+                            type: 'month',
+                            count: 3,
+                            text: '3月'
+                        },
+                        {
+                            type: 'month',
+                            count: 6,
+                            text: '6月'
+                        },
+                        {
+                            type: 'year',
+                            count: 1,
+                            text: '1年'
+                        },
+                        {
+                            type: 'year',
+                            count: 3,
+                            text: '3年'
+                        },
+                        {
+                            type: 'all',
+                            text: '所有'
+                        }
+                    ],
+                    selected: 1//表示以上定义button的index,从0开始
+                },
+
+                series: seriesOptions
+            });
+            if(isRedraw){
+                chart.redraw();
+            }
+        }
+    });
+
+</script>
+<select id="monitorItem" name="monitorItem">
+    <option>全部指标</option>
+    #if($!monitorItems)
+        #foreach($monitorItem in $!monitorItems)
+            <option value="$!{monitorItem}">
+                $!{monitorItem}
+            </option>
+        #end
+    #end
+</select>
+<div id="container" style="height: 500px; min-width: 600px"></div>

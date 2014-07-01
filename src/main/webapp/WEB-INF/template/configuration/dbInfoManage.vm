@@ -2,17 +2,50 @@
 <form class="form-horizontal" id="insert-form" role="form" action="../dbinfo/query" method="post">
     <div class="row placeholders">
         <div class="form-group">
-            <label for="ip" class="col-sm-2 control-label">数据库IP</label>
+            <label for="serverId" class="col-sm-2 control-label">MySQL服务器ServerId</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="serverId" name="serverId" placeholder="订单数据库"
+                       value="$!{dbInfoVO.serverId}">
+            </div>
+            <label for="groupId" class="col-sm-1 control-label">所属监控组</label>
+
+            <div class="col-sm-2">
+                <select class="form-control" id="groupId" name="groupId">
+                    <option></option>
+                    #if($!dbGroupVOList)
+                        #foreach($dbgroup in $!dbGroupVOList)
+                            <option value="$!{dbgroup.id}">
+                                [$!{dbgroup.id}]$!{dbgroup.groupName}
+                            </option>
+                        #end
+                    #end
+                </select>
+            </div>
+            <label for="ip" class="col-sm-1 control-label">数据库IP</label>
 
             <div class="col-sm-2">
                 <input type="text" class="form-control" id="ip" name="ip" placeholder="127.0.0.1"
                        value="$!{dbInfoVO.ip}">
             </div>
-            <label for="dbName" class="col-sm-1 control-label">数据库名称</label>
+
+        </div>
+        <div class="form-group">
+            <label for="masterOrSlave" class="col-sm-2 control-label">主备类型</label>
 
             <div class="col-sm-2">
-                <input type="text" class="form-control" id="dbName" name="dbName" placeholder="订单数据库"
-                       value="$!{dbInfoVO.dbName}">
+                <select class="form-control" id="masterOrSlave" name="masterOrSlave">
+                    <option value="master" #if(${dbInfoVO.masterOrSlave}=="master") selected #end>master</option>
+                    <option value="slave" #if(${dbInfoVO.masterOrSlave}=="slave") selected #end>slave</option>
+                </select>
+            </div>
+            <label for="dbType" class="col-sm-1 control-label">数据库类型</label>
+
+            <div class="col-sm-2">
+                <select class="form-control" id="dbType" name="dbType">
+                    <option value="ORACLE" #if(${dbInfoVO.dbType}=="ORACLE") selected #end>ORACLE</option>
+                    <option value="MYSQL" #if(${dbInfoVO.dbType}=="MYSQL") selected #end>MYSQL</option>
+                </select>
             </div>
             <label for="port" class="col-sm-1 control-label">端口</label>
 
@@ -45,9 +78,11 @@
             <thead>
             <tr>
                 <th>id</th>
-                <th>数据库名称</th>
+                <th>ServerId</th>
                 <th>ip</th>
                 <th>端口</th>
+                <th>主备</th>
+                <th>类型</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -56,9 +91,11 @@
                     #foreach($dbinfo in $!dbInfoVOList)
                     <tr>
                         <td>$!{dbinfo.id}</td>
-                        <td>$!{dbinfo.dbName}</td>
+                        <td>$!{dbinfo.serverId}</td>
                         <td>$!{dbinfo.ip}</td>
                         <td>$!{dbinfo.port}</td>
+                        <td>$!{dbinfo.masterOrSlave}</td>
+                        <td>$!{dbinfo.dbType}</td>
                         <td>
                             <button class-data="J-edit" class="btn btn-primary btn-sm" data-toggle="modal"
                                     data-target="#myModal">
@@ -96,14 +133,14 @@
                     <div class="form-group">
                         <label for="detail-id" class="col-sm-3 control-label">ID:</label>
 
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <input type="text" class="form-control" id="detail-id" name="id" disabled>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="detail-ip" class="col-sm-3 control-label">数据库IP:</label>
 
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <input type="text" class="form-control" id="detail-ip" name="ip">
                         </div>
                     </div>
@@ -114,11 +151,47 @@
                             <input type="text" class="form-control" id="detail-port" name="port"">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="detail-dbName" class="col-sm-3 control-label">数据库名称</label>
+                    <div  class="form-group">
+                        <label for="detail-serverId" class="col-sm-3 control-label">MySQL服务器ServerId</label>
 
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="detail-dbName" name="dbName">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="detail-serverId" name="serverId">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="detail-groupId" class="col-sm-3 control-label">监控组</label>
+
+                        <div class="col-sm-6">
+                            <select class="form-control" id="detail-groupId" name="groupId">
+                                <option></option>
+                                #if($!dbGroupVOList)
+                                    #foreach($dbgroup in $!dbGroupVOList)
+                                        <option value="$!{dbgroup.id}">
+                                            [$!{dbgroup.id}]$!{dbgroup.groupName}
+                                        </option>
+                                    #end
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="detail-masterOrSlave" class="col-sm-3 control-label">主备类型</label>
+
+                        <div class="col-sm-6">
+                            <select class="form-control" id="detail-masterOrSlave" name="masterOrSlave">
+                                <option value="master">master</option>
+                                <option value="slave">slave</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="detail-dbType" class="col-sm-3 control-label">数据库类型</label>
+
+                        <div class="col-sm-6">
+                            <select class="form-control" id="detail-dbType" name="dbType">
+                                <option value="ORACLE">ORACLE</option>
+                                <option value="MYSQL">MYSQL</option>
+                            </select>
                         </div>
                     </div>
                     <fieldset disabled>
@@ -204,7 +277,10 @@
                 J("#detail-id").val(dbinfo.id);
                 J("#detail-ip").val(dbinfo.ip);
                 J("#detail-port").val(dbinfo.port);
-                J("#detail-dbName").val(dbinfo.dbName);
+                J("#detail-serverId").val(dbinfo.serverId);
+                J("#detail-groupId").val(dbinfo.groupId);
+                J("#detail-masterOrSlave").val(dbinfo.masterOrSlave);
+                J("#detail-dbType").val(dbinfo.dbType);
                 J("#detail-createBy").val(dbinfo.createBy);
                 J("#detail-creationDate").val(dbinfo.creationDate);
                 J("#detail-modifiedBy").val(dbinfo.modifiedBy);

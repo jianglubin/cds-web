@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyin.wycds.web.dal.datainterface.DbMonitorInstanceDAO">
+    <cache/>
+    <resultMap type="DbMonitorInstanceDO" id="dbMonitorInstanceResultMap">
+        <id property="id" column="id"/>
+        <result property="dbMonitorId" column="db_monitor_Id"/>
+        <result property="monitorItem" column="monitor_item"/>
+        <result property="status" column="status"/>
+        <result property="monitorValue" column="monitor_value"/>
+        <result property="integral" column="integral"/>
+        <result property="errorNum" column="error_num"/>
+        <result property="alarmMsg" column="alarm_msg"/>
+        <result property="creationDate" column="creation_date"/>
+    </resultMap>
+    <select id="getDbMonitorItem" resultType="String">
+        select monitor_item from db_monitor_instance group by monitor_item
+    </select>
+    <!-- 根据组合条件查询监控项信息总数-->
+    <select id="getDbMonitorInstanceAndClassCount" parameterType="map" resultType="Integer">
+        select count(id) from db_monitor_instance
+        <where>
+            <if test="dbMonitorInstanceDO.dbMonitorId!=null and dbMonitorInstanceDO.dbMonitorId!=''">and db_monitor_Id=#{dbMonitorInstanceDO.dbMonitorId}</if>
+            <if test="dbMonitorInstanceDO.monitorItem!=null and dbMonitorInstanceDO.monitorItem!=''">and monitor_item=#{dbMonitorInstanceDO.monitorItem}</if>
+            <if test="dbMonitorInstanceDO.status!=null and dbMonitorInstanceDO.status!=''">and status=#{dbMonitorInstanceDO.status}</if>
+            <if test="dbMonitorInstanceDO.integral!=null and dbMonitorInstanceDO.integral!=''">and integral=#{dbMonitorInstanceDO.integral}</if>
+            <if test="dbMonitorInstanceDO.errorNum!=null and dbMonitorInstanceDO.errorNum!=''">and error_num=#{dbMonitorInstanceDO.errorNum}</if>
+            <if test="beginTime!=null and beginTime!=''">and creation_date &gt;=#{beginTime}</if>
+            <if test="endTime!=null and endTime!=''">and creation_date &lt;=#{endTime}</if>
+        </where>
+    </select>
+    <!-- 根据组合条件查询监控项信息,无分页-->
+    <select id="getDbMonitorInstanceAndClass" parameterType="map" resultType="DbMonitorInstanceDO" resultMap="dbMonitorInstanceResultMap">
+        select * from db_monitor_instance
+        <where>
+            <if test="dbMonitorInstanceDO.dbMonitorId!=null and dbMonitorInstanceDO.dbMonitorId!=''">and db_monitor_Id=#{dbMonitorInstanceDO.dbMonitorId}</if>
+            <if test="dbMonitorInstanceDO.monitorItem!=null and dbMonitorInstanceDO.monitorItem!=''">and monitor_item=#{dbMonitorInstanceDO.monitorItem}</if>
+            <if test="dbMonitorInstanceDO.status!=null and dbMonitorInstanceDO.status!=''">and status=#{dbMonitorInstanceDO.status}</if>
+            <if test="dbMonitorInstanceDO.integral!=null and dbMonitorInstanceDO.integral!=''">and integral=#{dbMonitorInstanceDO.integral}</if>
+            <if test="dbMonitorInstanceDO.errorNum!=null and dbMonitorInstanceDO.errorNum!=''">and error_num=#{dbMonitorInstanceDO.errorNum}</if>
+            <if test="beginTime!=null and beginTime!=''">and creation_date &gt;=#{beginTime}</if>
+            <if test="endTime!=null and endTime!=''">and creation_date &lt;=#{endTime}</if>
+        </where>
+        order by creation_date
+    </select>
+    <!-- 根据id查询监控项信息-->
+    <select id="getDbMonitorInstance" parameterType="String" resultType="DbMonitorInstanceDO" resultMap="dbMonitorInstanceResultMap">
+        select * from db_monitor_instance where id=#{id}
+    </select>
+</mapper>

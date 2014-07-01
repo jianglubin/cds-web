@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyin.wycds.web.dal.datainterface.DbHostGroupDAO">
+    <cache/>
+    <resultMap type="DbHostGroupDO" id="dbHostGroupResultMap">
+        <id property="id" column="id"/>
+        <result property="groupName" column="group_name"/>
+        <result property="dbType" column="db_type"/>
+        <result property="createBy" column="create_by"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="modifiedBy" column="modified_by"/>
+        <result property="modificationDate" column="modification_date"/>
+        <result property="deleteStatus" column="delete_status"/>
+    </resultMap>
+    <!-- 获取状态为"未删除"的所有数据库群组信息 -->
+    <select id="getDbHostGroupAllList" resultType="DbHostGroupDO" resultMap="dbHostGroupResultMap">
+        select * from db_monitor_group where delete_status='false' order by id desc
+    </select>
+    <!-- 获取状态为"未删除"的所有数据库群组信息,带分页 -->
+    <select id="getDbHostGroupList" parameterType="com.wangyin.wycds.web.util.Paginator" resultType="DbHostGroupDO"
+            resultMap="dbHostGroupResultMap">
+        select * from db_monitor_group where delete_status='false' order by id desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 获取状态为"未删除"的所有数据库群组信息总数 -->
+    <select id="getDbHostGroupListCount" resultType="Integer">
+        select count(id) from db_monitor_group where delete_status='false'
+    </select>
+    <!-- 根据组合条件查询数据库群组信息,无分页-->
+    <select id="getDbHostGroupAndClassNoPaginator" parameterType="map" resultType="DbHostGroupDO" resultMap="dbHostGroupResultMap">
+        select * from db_monitor_group
+        <where>
+            delete_status='false'
+            <if test="dbHostGroupVO.groupName!=null and dbHostGroupVO.groupName!=''">and group_name like CONCAT(CONCAT('%',
+                #{dbHostGroupVO.groupName}),'%')
+            </if>
+            <if test="dbHostGroupVO.id!=null and dbHostGroupVO.id!=''">and id=#{dbHostGroupVO.id}</if>
+        </where>
+        order by id desc
+    </select>
+    <!-- 根据组合条件查询数据库群组信息-->
+    <select id="getDbHostGroupAndClass" parameterType="map" resultType="DbHostGroupDO" resultMap="dbHostGroupResultMap">
+        select * from db_monitor_group
+        <where>
+            delete_status='false'
+            <if test="dbHostGroupVO.groupName!=null and dbHostGroupVO.groupName!=''">and group_name like CONCAT(CONCAT('%',
+                #{dbHostGroupVO.groupName}),'%')
+            </if>
+            <if test="dbHostGroupVO.dbType!=null and dbHostGroupVO.dbType!=''">and db_type=#{dbHostGroupVO.dbType}</if>
+        </where>
+        order by id desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 根据组合条件查询数据库群组信息总数-->
+    <select id="getDbHostGroupAndClassCount" parameterType="map" resultType="Integer">
+        select count(id) from db_monitor_group
+        <where>
+            delete_status='false'
+            <if test="dbHostGroupVO.groupName!=null and dbHostGroupVO.groupName!=''">and group_name like CONCAT(CONCAT('%',
+                #{dbHostGroupVO.groupName}),'%')
+            </if>
+            <if test="dbHostGroupVO.dbType!=null and dbHostGroupVO.dbType!=''">and db_type=#{dbHostGroupVO.dbType}</if>
+        </where>
+    </select>
+    <!-- 根据id查询数据库群组信息-->
+    <select id="getDbHostGroup" parameterType="String" resultType="DbHostGroupDO" resultMap="dbHostGroupResultMap">
+        select * from db_monitor_group where id=#{id}
+    </select>
+    <!-- 更新数据库群组信息 -->
+    <update id="updateDbHostGroup" parameterType="DbHostGroupDO">
+        UPDATE db_monitor_group
+        <set>
+            <if test="groupName!=null and groupName!=''">group_name=#{groupName},</if>
+            <if test="dbType!=null and dbType!=''">and db_type=#{dbType}</if>
+            <if test="modifiedBy!=null and modifiedBy!=''">modified_by=#{modifiedBy}</if>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+    <!-- 删除数据库群组信息 -->
+    <update id="deleteDbHostGroup" parameterType="String">
+        UPDATE db_monitor_group set delete_status='true',modified_by=#{modifiedBy},modification_date=sysdate() where
+        id=#{id}
+    </update>
+    <!-- 插入数据库群组信息 -->
+    <insert id="insertDbHostGroup" parameterType="DbHostGroupDO" useGeneratedKeys="true">
+        INSERT INTO db_monitor_group
+        (`group_name`,
+        `db_type`,
+        `create_by`,
+        `creation_date`,
+        `modification_date`,
+        `modified_By`)
+        VALUES
+        (#{groupName},
+        #{dbType},
+        #{createBy},
+        sysdate(),
+        sysdate(),
+        #{modifiedBy});
+    </insert>
+</mapper>

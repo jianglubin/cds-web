@@ -1,0 +1,458 @@
+<h3 class="page-header">新增监控项</h3>
+<form class="form-horizontal" id="insert-form" role="form" action="../dbMonitor/query" method="post" enctype="multipart/form-data">
+    <div class="row placeholders">
+        <div class="form-group">
+            <label for="item" class="col-sm-2 control-label">监控项</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="item" name="item" placeholder="CPU监控"
+                       value="$!{dbMonitorVO.item}">
+            </div>
+            <label for="itemDesc" class="col-sm-1 control-label">监控项描述</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="itemDesc" name="itemDesc" placeholder="用于监控数据库基本信息"
+                       value="$!{dbMonitorVO.itemDesc}">
+            </div>
+            <label for="groupId" class="col-sm-1 control-label">所属监控组</label>
+
+            <div class="col-sm-2">
+                <select class="form-control" id="groupId" name="groupId">
+                    <option></option>
+                    #if($!dbGroupVOList)
+                        #foreach($dbgroup in $!dbGroupVOList)
+                            <option value="$!{dbgroup.id}">
+                                [$!{dbgroup.id}]$!{dbgroup.groupName}
+                            </option>
+                        #end
+                    #end
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="errorNumUpper" class="col-sm-2 control-label">允许最大连续错误次数</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="errorNumUpper" name="errorNumUpper" placeholder="3"
+                       value="$!{dbMonitorVO.errorNumUpper}">
+            </div>
+            <label for="checkTimes" class="col-sm-1 control-label">监控次数</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="checkTimes" name="checkTimes" placeholder="3"
+                       value="$!{dbMonitorVO.checkTimes}">
+            </div>
+            <label for="checkInterval" class="col-sm-1 control-label">间隔检测时间单位</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="checkInterval" name="checkInterval" placeholder="s"
+                       value="$!{dbMonitorVO.checkInterval}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="thresholdUpper" class="col-sm-2 control-label">阈值上限</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="thresholdUpper" name="thresholdUpper" placeholder="3"
+                       value="$!{dbMonitorVO.thresholdUpper}">
+            </div>
+            <label for="thresholdLower" class="col-sm-1 control-label">阈值下限</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="thresholdLower" name="thresholdLower" placeholder="1"
+                       value="$!{dbMonitorVO.thresholdLower}">
+            </div>
+            <label for="power" class="col-sm-1 control-label">权重</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="power" name="power" placeholder="1"
+                       value="$!{dbMonitorVO.power}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="scriptType" class="col-sm-2 control-label">监控脚本类型</label>
+
+            <div class="col-sm-2">
+                <select class="form-control" id="scriptType" name="scriptType">
+                    <option value="python" #if(${dbMonitorVO.scriptType}=="python") selected #end>python</option>
+                    <option value="shell" #if(${dbMonitorVO.scriptType}=="shell") selected #end>shell</option>
+                </select>
+            </div>
+            <label for="scriptPath" class="col-sm-1 control-label">脚本地址</label>
+
+            <div class="col-sm-4">
+                <input type="file" class="form-control" id="scriptPath" name="scriptPath" placeholder=""
+                       value="$!{dbMonitorVO.scriptPath}">
+            </div>
+
+        </div>
+        <div class="form-group">
+            <div class="text-success col-sm-offset-2 col-sm-10" id="group-handle-message">
+                #if( $!{message})
+                    $!{message}
+                #elseif($!{error})
+                    <p class="text-danger glyphicon glyphicon-remove">$!{error}</p>
+                #end
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" class="btn btn-success glyphicon glyphicon-ok" id="addMonitor">新 增</button>
+                <button type="submit" class="btn btn-primary glyphicon glyphicon-search" id="queryDb">查 询</button>
+            </div>
+        </div>
+
+    </div>
+    <h3 class="sub-header">现有监控项</h3>
+
+    <div class="table-responsive">
+        <table class="table table-stritemdesced">
+            <thead>
+            <tr>
+                <th>监控项</th>
+                <th>监控描述</th>
+                <th>允许最大错误次数</th>
+                <th>监控次数</th>
+                <th>权重</th>
+                <th>间隔检测时间</th>
+                <th>阈值上限</th>
+                <th>阈值下限</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+                #if($!dbMonitorVOList&&$!dbMonitorVOList.size()!=0)
+                    #foreach($dbmonitor in $!dbMonitorVOList)
+                    <tr>
+                        <td>
+                            <input type="hidden" id="monitorId" name="monitorId" value="$!{dbmonitor.id}">
+                            $!{dbmonitor.item}
+                        </td>
+                        <td>$!{dbmonitor.itemDesc}</td>
+                        <td>$!{dbmonitor.errorNumUpper}</td>
+                        <td>$!{dbmonitor.checkTimes}</td>
+                        <td>$!{dbmonitor.power}</td>
+                        <td>$!{dbmonitor.checkInterval}</td>
+                        <td>$!{dbmonitor.thresholdUpper}</td>
+                        <td>$!{dbmonitor.thresholdLower}</td>
+                        <td>
+                            <button class-data="J-edit" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#myModal">
+                                详情
+                            </button>
+                            <button class-data="J-close" class="btn btn-danger btn-sm"  #if($!{dbmonitor.deleteStatus}==true)style="display:none" #end>
+                                停用
+                            </button>
+                            <button class-data="J-open" class="btn btn-success btn-sm"  #if($!{dbmonitor.deleteStatus}==false)style="display:none" #end>
+                                启用
+                            </button>
+                        </td>
+                    </tr>
+                    #end
+                #else
+                <tr>
+                    <td colspan="8">暂无数据!</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+        <div class="row placeholders">
+            <input type="hidden" name="page" id="page" value="$!{page}">
+            #parse("/layout/pager.vm")
+        </div>
+    </div>
+</form>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">监控项信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="update-form" role="form" action="" method="post">
+                    <div class="form-group">
+                        <label for="detail-id" class="col-sm-2 control-label">ID:</label>
+
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="detail-id" name="id" disabled>
+                        </div>
+                        <label for="detail-item" class="col-sm-2 control-label">监控项</label>
+
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="detail-item" name="item">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="detail-groupId" class="col-sm-2 control-label">监控组</label>
+
+                        <div class="col-sm-4">
+                            <input type="hidden" name="oldGroupId" id="detail-oldGroupId" >
+                            <select class="form-control" id="detail-groupId" name="groupId">
+                                <option></option>
+                                #if($!dbGroupVOList)
+                                    #foreach($dbgroup in $!dbGroupVOList)
+                                        <option value="$!{dbgroup.id}">
+                                            [$!{dbgroup.id}]$!{dbgroup.groupName}
+                                        </option>
+                                    #end
+                                #end
+                            </select>
+                        </div>
+                        <label for="detail-errorNumUpper" class="col-sm-2 control-label">允许错误次数</label>
+
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="detail-errorNumUpper" name="errorNumUpper">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="detail-checkTimes" class="col-sm-2 control-label">监控次数</label>
+
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="detail-checkTimes" name="checkTimes">
+                        </div>
+                        <label for="detail-checkInterval" class="col-sm-2 control-label">间隔检测时间单位</label>
+
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="detail-checkInterval" name="checkInterval">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="detail-thresholdUpper" class="col-sm-2 control-label">阈值上限</label>
+
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="detail-thresholdUpper" name="thresholdUpper">
+                        </div>
+                        <label for="detail-thresholdLower" class="col-sm-2 control-label">阈值下限</label>
+
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="detail-thresholdLower" name="thresholdLower">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="detail-scriptType" class="col-sm-2 control-label">监控脚本类型</label>
+
+                        <div class="col-sm-4">
+                            <select class="form-control" id="detail-scriptType" name="scriptType">
+                                <option value="python">python</option>
+                                <option value="shell">shell</option>
+                            </select>
+                        </div>
+                        <label for="detail-scriptPath" class="col-sm-2 control-label">脚本地址</label>
+
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="detail-scriptPath" name="scriptPath">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="detail-power" class="col-sm-2 control-label">权重</label>
+
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="detail-power" name="power">
+                        </div>
+                        <label for="detail-power" class="col-sm-2 control-label">监控项描述</label>
+
+                        <div class="col-sm-4">
+                            <textarea name="itemDesc" id="detail-itemDesc" rows="4" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <fieldset disabled>
+                        <div class="form-group">
+                            <label for="detail-createBy" class="col-sm-2 control-label">创建人:</label>
+
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="detail-createBy" name="createBy">
+                            </div>
+                            <label for="detail-creationDate" class="col-sm-2 control-label">创建时间:</label>
+
+                            <div class="col-sm-4">
+                                <input type="datetime" class="form-control" id="detail-creationDate"
+                                       name="creationDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="detail-modifiedBy" class="col-sm-2 control-label">更新人:</label>
+
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="detail-modifiedBy" name="modifiedBy">
+                            </div>
+                            <label for="detail-modificationDate" class="col-sm-2 control-label">更新时间:</label>
+
+                            <div class="col-sm-4">
+                                <input type="datetime" class="form-control" id="detail-modificationDate"
+                                       name="modificationDate">
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <p id="db-update-message" hidden="hidden"></p>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+                <button type="button" class="btn btn-primary" id="updateInfo">更 新</button>
+                <button id="res" id="res" type="reset" hidden="hidden"/>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var J = jQuery.noConflict();
+    J(document).ready(function () {
+        //新增数据库信息
+        J("#addMonitor").click(function (e) {
+            e.preventDefault();
+            J("#insert-form").attr("action", "../dbMonitor/add")
+            J("#insert-form").submit();
+        });
+        //绑定操作的方法 展示详情信息
+        J("#insert-form").on("click", "button[class-data=J-edit]", function(e){
+            e.preventDefault();
+            resetForm();
+            var dbInfoId = J(this).parents("tr").find("#monitorId").val();
+            J.ajax({
+                type: "POST",
+                url: "../dbMonitor/showDetail.json",
+                data: "id=" + dbInfoId,
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    //设置信息
+                    putInfo(jqXHR, "false");
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    var message = J("#db-update-message");
+                    showErrorMessage(message, xhr);
+                }
+            });
+        });
+        //设置返回的数据库信息
+        function putInfo(jqXHR, isUpdate) {
+            var dbinfo = J.parseJSON(jqXHR.responseText).dbMonitorVO;
+            var error = J.parseJSON(jqXHR.responseText).error;
+            var messageObj = J("#db-update-message");
+            if (error) {
+                showErrorMessage(messageObj, error);
+            } else {
+                J("#detail-id").val(dbinfo.id);
+                J("#detail-item").val(dbinfo.item);
+                J("#detail-itemDesc").val(dbinfo.itemDesc);
+                J("#detail-scriptType").val(dbinfo.scriptType);
+                J("#detail-groupId").val(dbinfo.groupId);
+                J("#detail-oldGroupId").val(dbinfo.groupId);
+                J("#detail-scriptPath").val(dbinfo.scriptPath);
+                J("#detail-checkInterval").val(dbinfo.checkInterval);
+                J("#detail-errorNumUpper").val(dbinfo.errorNumUpper);
+                J("#detail-checkTimes").val(dbinfo.checkTimes);
+                J("#detail-thresholdUpper").val(dbinfo.thresholdUpper);
+                J("#detail-thresholdLower").val(dbinfo.thresholdLower);
+                J("#detail-power").val(dbinfo.power);
+                J("#detail-createBy").val(dbinfo.createBy);
+                J("#detail-creationDate").val(dbinfo.creationDate);
+                J("#detail-modifiedBy").val(dbinfo.modifiedBy);
+                J("#detail-modificationDate").val(dbinfo.modificationDate);
+                if (isUpdate == "true") {
+                    messageObj.text("保存信息成功!");
+                }
+            }
+            messageObj.show();
+        };
+        //更新数据库信息
+        J("#updateInfo").click(function (e) {
+            e.preventDefault();
+            var params = {};
+            //拼装数据
+            J("#update-form").find("select,input[type=text],input[type=datetime]").each(function (index) {
+                params[J(this).attr("name")] = J(this).val();
+            })
+            J.ajax({
+                type: "POST",
+                url: "../dbMonitor/update.json",
+                data: params,
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    //设置信息
+                    putInfo(jqXHR, "true");
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    var message = J("#db-update-message");
+                    showErrorMessage(message, xhr);
+                }
+            });
+        });
+        //停用监控信息
+        J("#insert-form").on("click", "button[class-data=J-close]", function(e){
+            e.preventDefault();
+            var tr=J(this).parents("tr");
+            var dbInfoId = tr.find("#monitorId").val();;
+            if(confirm("确定要停用监控?")){
+                J.ajax({
+                    url: '../dbMonitor/updateStatus.json',
+                    data: "status=true&id="+dbInfoId,
+                    type: "POST",
+                    dataType:"json",
+                    contentType:"application/x-www-form-urlencoded;charset=UTF-8",
+                    success: function(data, textStatus, jqXHR){
+                        var error = J.parseJSON(jqXHR.responseText).error;
+                        var messageObj = J("#group-handle-message");
+                        if (error) {
+                            showErrorMessage(messageObj, error);
+                        }else{
+                            messageObj.text('停用信息成功!');
+                            tr.find("button[class-data=J-close]").hide();
+                            tr.find("button[class-data=J-open]").show();
+                        }
+
+                    },
+                    error:function(xhr,textStatus){
+                        J("#group-handle-message").text('停用信息失败!');
+                    }
+                });
+
+            }
+        });
+        //启用监控信息
+        J("#insert-form").on("click", "button[class-data=J-open]", function(e){
+            e.preventDefault();
+            var tr=J(this).parents("tr");
+            var dbInfoId = tr.find("#monitorId").val();
+            if(confirm("确定要启用监控?")){
+                J.ajax({
+                    url: '../dbMonitor/updateStatus.json',
+                    data: "status=false&id="+dbInfoId,
+                    type: "POST",
+                    dataType:"json",
+                    contentType:"application/x-www-form-urlencoded;charset=UTF-8",
+                    success: function(data, textStatus, jqXHR){
+                        var error = J.parseJSON(jqXHR.responseText).error;
+                        var messageObj = J("#group-handle-message");
+                        if (error) {
+                            showErrorMessage(messageObj, error);
+                        }else{
+                            messageObj.text('启用信息成功!');
+                            tr.find("button[class-data=J-close]").show();
+                            tr.find("button[class-data=J-open]").hide();
+                        }
+
+                    },
+                    error:function(xhr,textStatus){
+                        J("#group-handle-message").text('停用信息失败!');
+                    }
+                });
+
+            }
+        });
+        //清空表单信息
+        function resetForm() {
+            J("#db-update-message").text("");
+            J("#db-update-message").removeClass("text-danger glyphicon glyphicon-remove");
+            J("#res").click();
+        }
+
+        //展示错误信息
+        function showErrorMessage(obj, message) {
+            obj.html(message);
+            obj.addClass("text-danger glyphicon glyphicon-remove");
+        }
+    });
+</script>

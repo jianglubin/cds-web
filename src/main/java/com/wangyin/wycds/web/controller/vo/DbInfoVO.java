@@ -7,7 +7,6 @@ package com.wangyin.wycds.web.controller.vo;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 /**
  * 数据库基本信息视图
@@ -19,7 +18,7 @@ public class DbInfoVO extends BaseVO {
     /**
      * 数据库ID
      */
-    private Long id;
+    private String id;
     /**
      * 数据库地址
      */
@@ -32,10 +31,25 @@ public class DbInfoVO extends BaseVO {
     @NotBlank(message = "数据库端口不能为空!")
     private String port;
     /**
-     * 数据库名称
+     * MySQL服务器ServerId
      */
-    @Size(min = 0, max = 30, message = "数据库名称长度不能大于30字!")
-    private String dbName;
+    @NotBlank(message = "MySQL服务器ServerId不能为空!")
+    private String serverId;
+    /**
+     * 监控组
+     */
+    @NotBlank(message = "监控组id不能为空!")
+    private String groupId;
+    /**
+     * 主备类型
+     */
+    @NotBlank(message = "主备类型不能为空!")
+    private String masterOrSlave;
+    /**
+     * 数据库类型
+     */
+    @NotBlank(message = "数据库类型不能为空!")
+    private String dbType;
 
 
     @Override
@@ -44,21 +58,24 @@ public class DbInfoVO extends BaseVO {
         sb.append("id=").append(id);
         sb.append(", ip=").append(ip);
         sb.append(", port=").append(port);
-        sb.append(", dbName='").append(dbName).append('\'');
-        sb.append(", createBy='").append(getCreateBy()).append('\'');
-        sb.append(", creationDate='").append(getCreationDate()).append('\'');
-        sb.append(", modifiedBy='").append(getModifiedBy()).append('\'');
-        sb.append(", modificationDate='").append(getModificationDate()).append('\'');
-        sb.append(", deleteStatus='").append(getDeleteStatus()).append('\'');
+        sb.append(", masterOrSlave=").append(masterOrSlave);
+        sb.append(", dbType=").append(dbType);
+        sb.append(", serverId='").append(serverId);
+        sb.append(", groupId='").append(groupId);
+        sb.append(", createBy='").append(getCreateBy());
+        sb.append(", creationDate='").append(getCreationDate());
+        sb.append(", modifiedBy='").append(getModifiedBy());
+        sb.append(", modificationDate='").append(getModificationDate());
+        sb.append(", deleteStatus='").append(getDeleteStatus());
         sb.append('}');
         return sb.toString();
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -78,12 +95,35 @@ public class DbInfoVO extends BaseVO {
         this.port = port;
     }
 
-    public String getDbName() {
-        return dbName;
+    public String getServerId() {
+        return serverId;
     }
 
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
+    public void setServerId(String serverId) {
+        this.serverId = serverId;
     }
 
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getMasterOrSlave() {
+        return masterOrSlave;
+    }
+
+    public void setMasterOrSlave(String masterOrSlave) {
+        this.masterOrSlave = masterOrSlave;
+    }
+
+    public String getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
+    }
 }

@@ -4,9 +4,10 @@
  */
 package com.wangyin.wycds.web.controller;
 
+import com.wangyin.wycds.web.biz.DbHostGroupService;
 import com.wangyin.wycds.web.biz.DbInfoService;
-import com.wangyin.wycds.web.util.Paginator;
 import com.wangyin.wycds.web.controller.vo.DbInfoVO;
+import com.wangyin.wycds.web.util.Paginator;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -35,9 +36,11 @@ public class DbInfoController extends BaseController {
     @Resource(name = "dbInfoService")
     private DbInfoService dbInfoService;
 
+    @Resource(name = "dbHostGroupService")
+    private DbHostGroupService dbHostGroupService;
+
     @RequestMapping("/dbinfo/show")
-    public ModelAndView doGet(ModelMap modelMap,HttpSession session) {
-        getUser(session);
+    public ModelAndView doGet(ModelMap modelMap) {
         return queryAll(modelMap);
     }
 
@@ -53,6 +56,7 @@ public class DbInfoController extends BaseController {
         dbInfoVOList = dbInfoService.getDbInfoList(paginator);
         modelMap.addAttribute("paginator", paginator);
         modelMap.addAttribute("dbInfoVOList", dbInfoVOList);
+        modelMap.addAttribute("dbGroupVOList",dbHostGroupService.getDbHostGroupList());
         return new ModelAndView(RETURN_PAGE, modelMap);
     }
 
@@ -74,11 +78,12 @@ public class DbInfoController extends BaseController {
         modelMap.addAttribute("dbInfoVO", dbInfoVO);
         modelMap.addAttribute("paginator", paginator);
         modelMap.addAttribute("dbInfoVOList", dbInfoVOList);
+        modelMap.addAttribute("dbGroupVOList",dbHostGroupService.getDbHostGroupList());
         return new ModelAndView(RETURN_PAGE, modelMap);
     }
 
     @RequestMapping("/dbinfo/add")
-    public ModelAndView add(@Valid DbInfoVO dbInfoVO, BindingResult result, ModelMap modelMap,HttpSession session) {
+    public ModelAndView add(@Valid DbInfoVO dbInfoVO, BindingResult result, ModelMap modelMap, HttpSession session) {
         //校验没有通过,返回错误结果
         if (result.hasErrors()) {
             return new ModelAndView(RETURN_PAGE, ERROR, getError(result));
@@ -87,7 +92,7 @@ public class DbInfoController extends BaseController {
         dbInfoVO.setModifiedBy(getUser(session));
         Boolean addResult = dbInfoService.insertDbInfo(dbInfoVO);
         if (addResult) {
-            modelMap.addAttribute(MESSAGE, "新增数据库信息成功!") ;
+            modelMap.addAttribute(MESSAGE, "新增数据库信息成功!");
             return queryAll(modelMap);
         } else {
             return new ModelAndView(RETURN_PAGE, ERROR, "新增数据库信息失败!");
@@ -95,9 +100,9 @@ public class DbInfoController extends BaseController {
     }
 
     @RequestMapping("/dbinfo/update")
-    public ModelAndView update(@Valid DbInfoVO dbInfoVO, BindingResult result, ModelMap modelMap,HttpSession session) {
+    public ModelAndView update(@Valid DbInfoVO dbInfoVO, BindingResult result, ModelMap modelMap, HttpSession session) {
         //单独校验id
-        if (dbInfoVO.getId() == null || dbInfoVO.getId() == 0L) {
+        if (dbInfoVO.getId() == null || StringUtils.isBlank(dbInfoVO.getId())) {
 
             return new ModelAndView(RETURN_PAGE, ERROR, "缺少数据库id!");
         }
@@ -128,7 +133,7 @@ public class DbInfoController extends BaseController {
     }
 
     @RequestMapping(value = "/dbinfo/delete")
-    public ModelAndView delete(String id,HttpSession session) {
+    public ModelAndView delete(String id, HttpSession session) {
         if (StringUtils.isBlank(id)) {
             return new ModelAndView(RETURN_PAGE, ERROR, "缺少数据库id!");
         }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyin.wycds.web.dal.datainterface.DbEventDAO">
+    <cache/>
+    <resultMap type="DbEventDO" id="eventResultMap">
+        <id property="id" column="id"/>
+        <result property="eventId" column="event_id"/>
+        <result property="eventType" column="event_type"/>
+        <result property="monitorGroupId" column="db_monitor_group_id"/>
+        <result property="dbInfoId" column="db_info_Id"/>
+        <result property="dbMonitorId" column="db_monitor_Id"/>
+        <result property="ip" column="ip"/>
+        <result property="port" column="port"/>
+        <result property="dbType" column="db_type"/>
+        <result property="createBy" column="create_by"/>
+        <result property="creationDate" column="creation_date"/>
+    </resultMap>
+    <!-- 获取状态为"未删除"的所有应用信息总数 -->
+    <select id="getEventCount" resultMap="eventResultMap" parameterType="String">
+        select * from db_event where db_info_Id=#{dbInfoId} and db_monitor_Id=#{dbMonitorId}
+    </select>
+    <!-- 根据id查询应用信息-->
+    <select id="getEventById" parameterType="String" resultType="DbEventDO" resultMap="eventResultMap">
+        select * from db_event where id=#{id}
+    </select>
+    <!-- 更新应用信息 -->
+    <update id="updateEvent" parameterType="DbEventDO">
+        UPDATE db_event
+        <set>
+            <if test="eventId!=null and eventId!=''">event_id=#{eventId},</if>
+            <if test="eventType!=null and eventType!=''">event_type=#{eventType},</if>
+            <if test="monitorGroupId!=null and monitorGroupId!=''">db_monitor_group_id=#{monitorGroupId},</if>
+            <if test="dbInfoId!=null and dbInfoId!=''">db_info_Id=#{dbInfoId},</if>
+            <if test="dbMonitorId!=null and dbMonitorId!=''">db_monitor_Id=#{dbMonitorId},</if>
+            <if test="ip!=null and ip!=''">ip=#{ip},</if>
+            <if test="port!=null and port!=''">port=#{port},</if>
+            <if test="dbType!=null and dbType!=''">db_type=#{dbType},</if>
+            <if test="createBy!=null and createBy!=''">create_by=#{createBy},</if>
+            creation_date=sysdate()
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+    <!-- 插入应用信息 -->
+    <insert id="insertEvent" parameterType="DbEventDO" useGeneratedKeys="true">
+        INSERT INTO db_event
+        (`event_id`,
+        `event_type`,
+        `db_monitor_group_id`,
+        `db_info_Id`,
+        `db_monitor_Id`,
+        `ip`,
+        `port`,
+        `db_type`,
+        `create_by`,
+        `creation_date`)
+        VALUES
+        (#{eventId},
+        #{eventType},
+        #{monitorGroupId},
+        #{dbInfoId},
+        #{dbMonitorId},
+        #{ip},
+        #{port},
+        #{dbType},
+        #{createBy},
+        sysdate());
+    </insert>
+</mapper>
