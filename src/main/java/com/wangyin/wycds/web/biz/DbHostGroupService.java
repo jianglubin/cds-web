@@ -30,12 +30,12 @@ public class DbHostGroupService {
     public List<DbHostGroupVO> getDbHostGroupList() {
         List<DbHostGroupDO> dbHostGroupDOs = dbHostGroupDAO.getDbHostGroupAllList();
         List<DbHostGroupVO> dbHostGroupVOs = new ArrayList<DbHostGroupVO>();
-        if(CollectionUtils.isEmpty(dbHostGroupDOs)){
+        if (CollectionUtils.isEmpty(dbHostGroupDOs)) {
             return null;
         }
-        for(DbHostGroupDO dbHostGroupDO:dbHostGroupDOs){
-            DbHostGroupVO dbHostGroupVO=new DbHostGroupVO();
-            ConvertUtil.copyProperties(dbHostGroupDO,dbHostGroupVO);
+        for (DbHostGroupDO dbHostGroupDO : dbHostGroupDOs) {
+            DbHostGroupVO dbHostGroupVO = new DbHostGroupVO();
+            ConvertUtil.copyProperties(dbHostGroupDO, dbHostGroupVO);
             dbHostGroupVOs.add(dbHostGroupVO);
         }
         return dbHostGroupVOs;
@@ -44,12 +44,12 @@ public class DbHostGroupService {
     public List<DbHostGroupVO> getDbHostGroupList(Paginator paginator) {
         List<DbHostGroupDO> dbHostGroupDOs = dbHostGroupDAO.getDbHostGroupList(paginator);
         List<DbHostGroupVO> dbHostGroupVOs = new ArrayList<DbHostGroupVO>();
-        if(CollectionUtils.isEmpty(dbHostGroupDOs)){
+        if (CollectionUtils.isEmpty(dbHostGroupDOs)) {
             return null;
         }
-        for(DbHostGroupDO dbHostGroupDO:dbHostGroupDOs){
-            DbHostGroupVO dbHostGroupVO=new DbHostGroupVO();
-            ConvertUtil.copyProperties(dbHostGroupDO,dbHostGroupVO);
+        for (DbHostGroupDO dbHostGroupDO : dbHostGroupDOs) {
+            DbHostGroupVO dbHostGroupVO = new DbHostGroupVO();
+            ConvertUtil.copyProperties(dbHostGroupDO, dbHostGroupVO);
             dbHostGroupVOs.add(dbHostGroupVO);
         }
         return dbHostGroupVOs;
@@ -66,12 +66,12 @@ public class DbHostGroupService {
     public List<DbHostGroupVO> getDbHostGroupAndClass(DbHostGroupVO dbHostGroupVO, String clusterId) {
         List<DbHostGroupDO> dbHostGroupDOs = dbHostGroupDAO.getDbHostGroupAndClassNoPaginator(dbHostGroupVO, clusterId);
         List<DbHostGroupVO> dbHostGroupVOs = new ArrayList<DbHostGroupVO>();
-        if(CollectionUtils.isEmpty(dbHostGroupDOs)){
+        if (CollectionUtils.isEmpty(dbHostGroupDOs)) {
             return null;
         }
-        for(DbHostGroupDO dbHostGroupDO:dbHostGroupDOs){
-            DbHostGroupVO newDbHostGroupVO=new DbHostGroupVO();
-            ConvertUtil.copyProperties(dbHostGroupDO,newDbHostGroupVO);
+        for (DbHostGroupDO dbHostGroupDO : dbHostGroupDOs) {
+            DbHostGroupVO newDbHostGroupVO = new DbHostGroupVO();
+            ConvertUtil.copyProperties(dbHostGroupDO, newDbHostGroupVO);
             dbHostGroupVOs.add(newDbHostGroupVO);
         }
         return dbHostGroupVOs;
@@ -80,12 +80,12 @@ public class DbHostGroupService {
     public List<DbHostGroupVO> getDbHostGroupAndClass(DbHostGroupVO dbHostGroupVO, Paginator paginator) {
         List<DbHostGroupDO> dbHostGroupDOs = dbHostGroupDAO.getDbHostGroupAndClass(dbHostGroupVO, paginator.getBeginIndex(), paginator.getItemsPerPage());
         List<DbHostGroupVO> dbHostGroupVOs = new ArrayList<DbHostGroupVO>();
-        if(CollectionUtils.isEmpty(dbHostGroupDOs)){
+        if (CollectionUtils.isEmpty(dbHostGroupDOs)) {
             return null;
         }
-        for(DbHostGroupDO dbHostGroupDO:dbHostGroupDOs){
-            DbHostGroupVO newDbHostGroupVO=new DbHostGroupVO();
-            ConvertUtil.copyProperties(dbHostGroupDO,newDbHostGroupVO);
+        for (DbHostGroupDO dbHostGroupDO : dbHostGroupDOs) {
+            DbHostGroupVO newDbHostGroupVO = new DbHostGroupVO();
+            ConvertUtil.copyProperties(dbHostGroupDO, newDbHostGroupVO);
             dbHostGroupVOs.add(newDbHostGroupVO);
         }
         return dbHostGroupVOs;

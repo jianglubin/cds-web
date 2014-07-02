@@ -50,17 +50,17 @@ public class ColumnInfoService {
         return ColumnInfoUtil.convert2VO(columnInfoDAO.getColumnInfo(id));
     }
 
-    public boolean insertColumnInfo(String[] columns, String splittingKeyId, String clusterId,String tableName,String userName) {
-        if(ArrayUtils.isEmpty(columns)|| StringUtils.isBlank(splittingKeyId)||StringUtils.isBlank(tableName)){
+    public boolean insertColumnInfo(String[] columns, String splittingKeyId, String clusterId, String tableName, String userName) {
+        if (ArrayUtils.isEmpty(columns) || StringUtils.isBlank(splittingKeyId) || StringUtils.isBlank(tableName)) {
             return false;
         }
-        ColumnInfoDO columnInfoDO=new ColumnInfoDO();
+        ColumnInfoDO columnInfoDO = new ColumnInfoDO();
         columnInfoDO.setSplittingKeyId(splittingKeyId);
         columnInfoDO.setTableName(tableName);
         columnInfoDO.setClusterId(clusterId);
         columnInfoDO.setCreateBy(userName);
         columnInfoDO.setModifiedBy(userName);
-        for(String column :columns){
+        for (String column : columns) {
             columnInfoDO.setColumnName(column);
             columnInfoDAO.insertColumnInfo(columnInfoDO);
         }
@@ -71,7 +71,7 @@ public class ColumnInfoService {
         return ColumnInfoUtil.checkIsOne(columnInfoDAO.updateColumnInfo(ColumnInfoUtil.convert2DO(columnInfoVO)));
     }
 
-    public boolean deleteColumnInfo(String id,String modifiedBy) {
-        return ColumnInfoUtil.checkIsOne(columnInfoDAO.deleteColumnInfo(id,modifiedBy));
+    public boolean deleteColumnInfo(String id, String modifiedBy) {
+        return ColumnInfoUtil.checkIsOne(columnInfoDAO.deleteColumnInfo(id, modifiedBy));
     }
 }

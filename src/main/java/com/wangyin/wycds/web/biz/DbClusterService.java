@@ -60,7 +60,7 @@ public class DbClusterService {
         return DbClusterUtil.checkIsOne(dbClusterDAO.updateDbCluster(DbClusterUtil.convert2DO(dbGroupVO)));
     }
 
-    public boolean deleteDbCluster(String id,String modifiedBy) {
+    public boolean deleteDbCluster(String id, String modifiedBy) {
         return DbClusterUtil.checkIsOne(dbClusterDAO.deleteDbCluster(id, modifiedBy));
     }
 }

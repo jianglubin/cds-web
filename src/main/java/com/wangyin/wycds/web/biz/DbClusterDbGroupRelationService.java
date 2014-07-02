@@ -31,14 +31,14 @@ public class DbClusterDbGroupRelationService {
         return DbClusterDbGroupRelationUtil.convert2VOList(dbClusterDOList);
     }
 
-    public boolean insertDbCluster(String[] groupIds,String clusterId,String groupType) {
-        if(ArrayUtils.isEmpty(groupIds)|| StringUtils.isBlank(clusterId)){
+    public boolean insertDbCluster(String[] groupIds, String clusterId, String groupType) {
+        if (ArrayUtils.isEmpty(groupIds) || StringUtils.isBlank(clusterId)) {
             return false;
         }
-        DbClusterDbGroupRelationDO dbClusterDbGroupRelationDO=new DbClusterDbGroupRelationDO();
+        DbClusterDbGroupRelationDO dbClusterDbGroupRelationDO = new DbClusterDbGroupRelationDO();
         dbClusterDbGroupRelationDO.setDbClusterId(clusterId);
         dbClusterDbGroupRelationDO.setGroupType(groupType);
-        for(String groupId :groupIds){
+        for (String groupId : groupIds) {
             dbClusterDbGroupRelationDO.setDbGroupId(groupId);
             dbClusterDbGroupRelationDAO.insertDbClusterDbGroupRelation(dbClusterDbGroupRelationDO);
         }

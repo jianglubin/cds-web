@@ -72,7 +72,7 @@ public class ParseDDLService {
             executeNoSplitting(dbClusterDbGroupRelationDOs, sql);
         } else {
             //存在切分信息,全局组执行原始sql,工作组执行替换规则后的sql
-            executeSplitting(sqlVO, columnInfoDOs, sql,dbClusterDbGroupRelationDOs);
+            executeSplitting(sqlVO, columnInfoDOs, sql, dbClusterDbGroupRelationDOs);
         }
         return sqlVO;
     }
@@ -109,15 +109,15 @@ public class ParseDDLService {
     private void executeSplitting(SqlVO sqlVO, List<ColumnInfoDO> columnInfoDOs, String sql, List<DbClusterDbGroupRelationDO> dbClusterDbGroupRelationDOs) {
         List<SplittingKeyRuleRelationDO> splittingKeyRuleRelationDOsAll = new ArrayList<SplittingKeyRuleRelationDO>();
         List<String> groupIdList = new ArrayList<String>();
-        List<DbInfoDbGroupRelationVO> globalDbInfoDbGroupRelationVOs=new ArrayList<DbInfoDbGroupRelationVO>();
+        List<DbInfoDbGroupRelationVO> globalDbInfoDbGroupRelationVOs = new ArrayList<DbInfoDbGroupRelationVO>();
         for (DbClusterDbGroupRelationDO dbClusterDbGroupRelationDO : dbClusterDbGroupRelationDOs) {
-            if(StringUtils.equalsIgnoreCase(dbClusterDbGroupRelationDO.getGroupType(),"Work")){
+            if (StringUtils.equalsIgnoreCase(dbClusterDbGroupRelationDO.getGroupType(), "Work")) {
                 groupIdList.add(dbClusterDbGroupRelationDO.getDbGroupId());
-            }else {
-                List<String> globalList=new ArrayList<String>();
+            } else {
+                List<String> globalList = new ArrayList<String>();
                 globalList.add(dbClusterDbGroupRelationDO.getDbGroupId());
                 List<DbInfoDbGroupRelationDO> dbInfoDbGroupRelationDOs = dbInfoDbGroupRelationDAO.getDbInfoDbGroupRelationListByIds(globalList);
-                globalDbInfoDbGroupRelationVOs=DbInfoDbGroupRelationUtil.convert2VOList(dbInfoDbGroupRelationDOs);
+                globalDbInfoDbGroupRelationVOs = DbInfoDbGroupRelationUtil.convert2VOList(dbInfoDbGroupRelationDOs);
             }
         }
         //全局组执行原始sql

@@ -5,7 +5,7 @@
     <cache/>
     <resultMap type="ResourcesCategoryDO" id="categoryResultMap">
         <id property="id" column="id"/>
-        <result property="name" column="name"/>
+        <result property="name" column="category_name"/>
         <result property="parentId" column="parent_id"/>
         <result property="createBy" column="create_by"/>
         <result property="creationDate" column="creation_date"/>
@@ -25,7 +25,7 @@
     <update id="updateCategory" parameterType="ResourcesCategoryDO">
         UPDATE resources_category
         <set>
-            <if test="name!=null and name!=''">name=#{name},</if>
+            <if test="name!=null and name!=''">category_name=#{name},</if>
             <if test="parentId!=null and parentId!=''">parent_id=#{parentId},</if>
             <if test="createBy!=null and createBy!=''">create_by=#{createBy},</if>
             creation_date=sysdate()
@@ -36,12 +36,12 @@
     </update>
     <!-- 删除类目信息 -->
     <update id="deleteCategory" parameterType="String">
-        UPDATE resources_category set delete_status='true',modified_by=#{modifiedBy},modification_date=sysdate() where department_id=#{id}
+        UPDATE resources_category set delete_status='true',modified_by=#{modifiedBy},modification_date=sysdate() where id=#{id}
     </update>
     <!-- 插入类目信息 -->
-    <insert id="insertCategory" parameterType="ResourcesCategoryDO" useGeneratedKeys="true">
+    <insert id="insertCategory" parameterType="ResourcesCategoryDO" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO resources_category
-        (`name`,
+        (`category_name`,
         `parent_id`,
         `create_by`,
         `creation_date`,
@@ -53,6 +53,6 @@
         #{createBy},
         sysdate(),
         sysdate(),
-        #{modifiedBy);
+        #{modifiedBy});
     </insert>
 </mapper>

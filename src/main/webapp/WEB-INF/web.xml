@@ -61,46 +61,47 @@
         <filter-name>Character Encoding</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    <!-- 单点过滤器 -->
-    <filter>
-        <filter-name>loginFilter</filter-name>
-        <filter-class>com.wangyin.ssoclient.sso.filter.LoginFilter</filter-class>
-    </filter>
-    <!-- 权限过滤器 -->
-    <filter>
-        <filter-name>authorityFilter</filter-name>
-        <filter-class>com.wangyin.ssoclient.sso.filter.AuthorityFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>loginFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>authorityFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
 
-    <listener>
-        <listener-class>com.wangyin.ssoclient.sso.listener.SsoSessionListener</listener-class>
-    </listener>
-    <!-- 登出 -->
-    <servlet>
-        <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>com.wangyin.ssoclient.sso.servlet.LogoutServlet</servlet-class>
-    </servlet>
-    <!-- 登出结果通知，单点登出内部使用 -->
-    <servlet>
-        <servlet-name>logoutInvoke</servlet-name>
-        <servlet-class>com.wangyin.ssoclient.sso.servlet.LogoutInvokeServlet</servlet-class>
-    </servlet>
+    <!--&lt;!&ndash; 单点过滤器 &ndash;&gt;-->
+    <!--<filter>-->
+        <!--<filter-name>loginFilter</filter-name>-->
+        <!--<filter-class>com.wangyin.ssoclient.sso.filter.LoginFilter</filter-class>-->
+    <!--</filter>-->
+    <!--&lt;!&ndash; 权限过滤器 &ndash;&gt;-->
+    <!--<filter>-->
+        <!--<filter-name>authorityFilter</filter-name>-->
+        <!--<filter-class>com.wangyin.ssoclient.sso.filter.AuthorityFilter</filter-class>-->
+    <!--</filter>-->
+    <!--<filter-mapping>-->
+        <!--<filter-name>loginFilter</filter-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
+    <!--</filter-mapping>-->
+    <!--<filter-mapping>-->
+        <!--<filter-name>authorityFilter</filter-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
+    <!--</filter-mapping>-->
 
-    <!--请将系统的登出链接指向到此链接-->
-    <servlet-mapping>
-        <servlet-name>LogoutServlet</servlet-name>
-        <url-pattern>/logout</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>logoutInvoke</servlet-name>
-        <url-pattern>/logoutInvoke</url-pattern>
-    </servlet-mapping>
+    <!--<listener>-->
+        <!--<listener-class>com.wangyin.ssoclient.sso.listener.SsoSessionListener</listener-class>-->
+    <!--</listener>-->
+    <!--&lt;!&ndash; 登出 &ndash;&gt;-->
+    <!--<servlet>-->
+        <!--<servlet-name>LogoutServlet</servlet-name>-->
+        <!--<servlet-class>com.wangyin.ssoclient.sso.servlet.LogoutServlet</servlet-class>-->
+    <!--</servlet>-->
+    <!--&lt;!&ndash; 登出结果通知，单点登出内部使用 &ndash;&gt;-->
+    <!--<servlet>-->
+        <!--<servlet-name>logoutInvoke</servlet-name>-->
+        <!--<servlet-class>com.wangyin.ssoclient.sso.servlet.LogoutInvokeServlet</servlet-class>-->
+    <!--</servlet>-->
+
+    <!--&lt;!&ndash;请将系统的登出链接指向到此链接&ndash;&gt;-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>LogoutServlet</servlet-name>-->
+        <!--<url-pattern>/logout</url-pattern>-->
+    <!--</servlet-mapping>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>logoutInvoke</servlet-name>-->
+        <!--<url-pattern>/logoutInvoke</url-pattern>-->
+    <!--</servlet-mapping>-->
 </web-app>

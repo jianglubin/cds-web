@@ -60,8 +60,8 @@ public class DbInfoService {
         return DbInfoUtil.checkIsOne(dbInfoDAO.updateDbInfo(DbInfoUtil.convert2DO(dbInfoVO)));
     }
 
-    public boolean deleteDbInfo(String id,String modifiedBy) {
-        return DbInfoUtil.checkIsOne(dbInfoDAO.deleteDbInfo(id,modifiedBy));
+    public boolean deleteDbInfo(String id, String modifiedBy) {
+        return DbInfoUtil.checkIsOne(dbInfoDAO.deleteDbInfo(id, modifiedBy));
     }
 
 }

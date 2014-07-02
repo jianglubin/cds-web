@@ -43,7 +43,7 @@ public class DbGroupService {
         return dbGroupDAO.getDbGroupAndClassCount(dbGroupVO);
     }
 
-    public List<DbGroupVO> getDbGroupAndClass(DbGroupVO dbGroupVO,String clusterId) {
+    public List<DbGroupVO> getDbGroupAndClass(DbGroupVO dbGroupVO, String clusterId) {
         List<DbGroupDO> dbGroupDOList = dbGroupDAO.getDbGroupAndClassNoPaginator(dbGroupVO, clusterId);
         return DbGroupUtil.convert2VOList(dbGroupDOList);
     }
@@ -65,7 +65,7 @@ public class DbGroupService {
         return DbGroupUtil.checkIsOne(dbGroupDAO.updateDbGroup(DbGroupUtil.convert2DO(dbGroupVO)));
     }
 
-    public boolean deleteDbGroup(String id,String modifiedBy) {
-        return DbGroupUtil.checkIsOne(dbGroupDAO.deleteDbGroup(id,modifiedBy));
+    public boolean deleteDbGroup(String id, String modifiedBy) {
+        return DbGroupUtil.checkIsOne(dbGroupDAO.deleteDbGroup(id, modifiedBy));
     }
 }

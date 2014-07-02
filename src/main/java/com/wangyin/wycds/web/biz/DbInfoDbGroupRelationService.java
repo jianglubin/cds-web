@@ -32,14 +32,14 @@ public class DbInfoDbGroupRelationService {
         return DbInfoDbGroupRelationUtil.convert2VOList(dbGroupDOList);
     }
 
-    public boolean insertDbCluster(String[] dbInfoIds,String groupId,String masterOrSlave) {
-        if(ArrayUtils.isEmpty(dbInfoIds)|| StringUtils.isBlank(groupId)||StringUtils.isBlank(masterOrSlave)){
+    public boolean insertDbCluster(String[] dbInfoIds, String groupId, String masterOrSlave) {
+        if (ArrayUtils.isEmpty(dbInfoIds) || StringUtils.isBlank(groupId) || StringUtils.isBlank(masterOrSlave)) {
             return false;
         }
-        DbInfoDbGroupRelationDO dbDbInfoDbGroupRelationDO=new DbInfoDbGroupRelationDO();
+        DbInfoDbGroupRelationDO dbDbInfoDbGroupRelationDO = new DbInfoDbGroupRelationDO();
         dbDbInfoDbGroupRelationDO.setDbGroupId(groupId);
         dbDbInfoDbGroupRelationDO.setMasterOrSlave(masterOrSlave);
-        for(String infoId :dbInfoIds){
+        for (String infoId : dbInfoIds) {
             dbDbInfoDbGroupRelationDO.setDbInfoId(infoId);
             dbInfoDbGroupRelationDAO.insertDbInfoDbGroupRelation(dbDbInfoDbGroupRelationDO);
         }
@@ -50,7 +50,7 @@ public class DbInfoDbGroupRelationService {
         return DbInfoDbGroupRelationUtil.checkIsOne(dbInfoDbGroupRelationDAO.deleteDbInfoDbGroupRelation(ids));
     }
 
-    public boolean updateDbInfoDbGroupRelation(String masterOrSlave,String id) {
-        return DbInfoDbGroupRelationUtil.checkIsOne(dbInfoDbGroupRelationDAO.updateDbInfoDbGroupRelation(masterOrSlave,id));
+    public boolean updateDbInfoDbGroupRelation(String masterOrSlave, String id) {
+        return DbInfoDbGroupRelationUtil.checkIsOne(dbInfoDbGroupRelationDAO.updateDbInfoDbGroupRelation(masterOrSlave, id));
     }
 }

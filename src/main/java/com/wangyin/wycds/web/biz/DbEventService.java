@@ -34,6 +34,7 @@ public class DbEventService {
 
     /**
      * 新增事件
+     *
      * @param dbGroupId
      * @param dbMonitorId
      * @param createBy
@@ -47,17 +48,18 @@ public class DbEventService {
             return;
         }
         for (DbInfoDO dbInfoDO : dbInfoDOs) {
-            insertOrUpdateDO(createBy,dbInfoDO,dbMonitorId);
+            insertOrUpdateDO(createBy, dbInfoDO, dbMonitorId);
         }
     }
 
     /**
      * 删除事件
+     *
      * @param dbGroupId
      * @param dbMonitorId
      * @param createBy
      */
-    public void deleteEvent(String dbGroupId, String dbMonitorId, String createBy){
+    public void deleteEvent(String dbGroupId, String dbMonitorId, String createBy) {
         if (StringUtils.isBlank(dbGroupId) || StringUtils.isBlank(dbMonitorId)) {
             return;
         }
@@ -67,7 +69,7 @@ public class DbEventService {
         }
         for (DbInfoDO dbInfoDO : dbInfoDOs) {
             DbEventDO dbEventCount = dbEventDAO.getEventCount(dbInfoDO.getId(), dbMonitorId);
-            DbEventDO dbEventDO ;
+            DbEventDO dbEventDO;
             if (dbEventCount != null) {
                 dbEventDO = new DbEventDO();
                 dbEventDO.setId(dbEventCount.getId());
@@ -80,11 +82,12 @@ public class DbEventService {
 
     /**
      * 新增数据库
+     *
      * @param createBy
      * @param dbInfoDO
      * @param dbMonitorId
      */
-    private void insertOrUpdateDO(String createBy,DbInfoDO dbInfoDO,String dbMonitorId){
+    private void insertOrUpdateDO(String createBy, DbInfoDO dbInfoDO, String dbMonitorId) {
         DbEventDO dbEventDO = new DbEventDO();
         dbEventDO.setCreateBy(createBy);
         dbEventDO.setDbInfoId(dbInfoDO.getId());
@@ -97,7 +100,7 @@ public class DbEventService {
         DbEventDO dbEventCount = dbEventDAO.getEventCount(dbInfoDO.getId(), dbMonitorId);
         if (dbEventCount == null) {
             dbEventDAO.insertEvent(dbEventDO);
-        }else{
+        } else {
             dbEventDO.setId(dbEventCount.getId());
             dbEventDAO.updateEvent(dbEventDO);
         }
@@ -105,6 +108,7 @@ public class DbEventService {
 
     /**
      * 获取eventId
+     *
      * @return
      */
     private String getEventId() {

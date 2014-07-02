@@ -29,7 +29,7 @@ public class SplittingKeyService {
         List<SplittingKeyDO> splittingKeyDOList = splittingKeyDAO.getSplittingKeyListNoPaginator();
         return SplittingKeyUtil.convert2VOList(splittingKeyDOList);
     }
-    
+
     public List<SplittingKeyVO> getSplittingKeyList(Paginator paginator) {
         List<SplittingKeyDO> splittingKeyDOList = splittingKeyDAO.getSplittingKeyList(paginator);
         return SplittingKeyUtil.convert2VOList(splittingKeyDOList);
@@ -60,7 +60,7 @@ public class SplittingKeyService {
         return SplittingKeyUtil.checkIsOne(splittingKeyDAO.updateSplittingKey(SplittingKeyUtil.convert2DO(splittingKeyVO)));
     }
 
-    public boolean deleteSplittingKey(String id,String modifiedBy) {
-        return SplittingKeyUtil.checkIsOne(splittingKeyDAO.deleteSplittingKey(id,modifiedBy));
+    public boolean deleteSplittingKey(String id, String modifiedBy) {
+        return SplittingKeyUtil.checkIsOne(splittingKeyDAO.deleteSplittingKey(id, modifiedBy));
     }
 }

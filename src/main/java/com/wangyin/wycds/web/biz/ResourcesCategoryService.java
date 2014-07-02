@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * 资源类目业务类
+ *
  * @author 蒋鲁宾
  * @version v 0.1 2014/7/1 16:25 Exp $$
  */
@@ -49,13 +50,26 @@ public class ResourcesCategoryService {
      *
      * @return
      */
-    public ResourcesCategoryVO getAllCategory() {
-        ResourcesCategoryVO resourcesCategoryVO = new ResourcesCategoryVO();
-        resourcesCategoryVO.setId("0");
-        resourcesCategoryVO.setName("网银在线");
-        resourcesCategoryVO.setParentId("#");
-        getCategoryByParent(resourcesCategoryVO);
-        return resourcesCategoryVO;
+    public List<ResourcesCategoryVO> getAllCategory() {
+        List<ResourcesCategoryVO> resourcesCategoryVOs = new ArrayList<ResourcesCategoryVO>();
+        List<ResourcesCategoryDO> resourcesCategoryDOs = resourcesCategoryDAO.getCategoryByParentId("0");
+        if (CollectionUtils.isEmpty(resourcesCategoryDOs)) {
+            ResourcesCategoryVO resourcesCategoryVO = new ResourcesCategoryVO();
+            resourcesCategoryVO.setId("0");
+            resourcesCategoryVO.setName("");
+            resourcesCategoryVO.setParentId("#");
+            getCategoryByParent(resourcesCategoryVO);
+            resourcesCategoryVOs.add(resourcesCategoryVO);
+        } else {
+            for (ResourcesCategoryDO resourcesCategoryDO : resourcesCategoryDOs) {
+                ResourcesCategoryVO resourcesCategoryVO = new ResourcesCategoryVO();
+                ConvertUtil.copyProperties(resourcesCategoryDO, resourcesCategoryVO);
+                resourcesCategoryVO.setParentId("#");
+                getCategoryByParent(resourcesCategoryVO);
+                resourcesCategoryVOs.add(resourcesCategoryVO);
+            }
+        }
+        return resourcesCategoryVOs;
     }
 
     /**
@@ -65,9 +79,10 @@ public class ResourcesCategoryService {
      * @param categoryName
      * @param createBy
      */
-    public void addCategory(String parentId,String categoryName,String createBy){
-        ResourcesCategoryDO resourcesCategoryDO=new ResourcesCategoryDO();
+    public void addCategory(String parentId, String categoryName, String createBy) {
+        ResourcesCategoryDO resourcesCategoryDO = new ResourcesCategoryDO();
         resourcesCategoryDO.setParentId(parentId);
+        resourcesCategoryDO.setName(categoryName);
         resourcesCategoryDO.setCreateBy(createBy);
         resourcesCategoryDO.setModifiedBy(createBy);
         resourcesCategoryDAO.insertCategory(resourcesCategoryDO);
@@ -81,8 +96,8 @@ public class ResourcesCategoryService {
      * @param name
      * @param modifiedBy
      */
-    public void updateCategory(String id,String parentId,String name,String modifiedBy){
-        ResourcesCategoryDO resourcesCategoryDO=new ResourcesCategoryDO();
+    public void updateCategory(String id, String parentId, String name, String modifiedBy) {
+        ResourcesCategoryDO resourcesCategoryDO = new ResourcesCategoryDO();
         resourcesCategoryDO.setId(id);
         resourcesCategoryDO.setParentId(parentId);
         resourcesCategoryDO.setName(name);
@@ -96,9 +111,10 @@ public class ResourcesCategoryService {
      * @param id
      * @param modifiedBy
      */
-    public void deleteCategory(String id,String modifiedBy){
-        resourcesCategoryDAO.deleteCategory(id,modifiedBy);
+    public void deleteCategory(String id, String modifiedBy) {
+        resourcesCategoryDAO.deleteCategory(id, modifiedBy);
     }
+
     /**
      * 递归获取子类目信息
      *
@@ -122,12 +138,17 @@ public class ResourcesCategoryService {
     /**
      * 获取类目树形结构对象
      *
-     * @param resourcesCategoryVO
+     * @param resourcesCategoryVOs
      * @return
      */
-    public List<TreeVO> getCategoryTreeJson(ResourcesCategoryVO resourcesCategoryVO) {
+    public List<TreeVO> getCategoryTreeJson(List<ResourcesCategoryVO> resourcesCategoryVOs) {
         List<TreeVO> treeVO = new ArrayList<TreeVO>();
-        convert(resourcesCategoryVO, treeVO);
+        if (CollectionUtils.isEmpty(resourcesCategoryVOs)) {
+            return treeVO;
+        }
+        for (ResourcesCategoryVO resourcesCategoryVO : resourcesCategoryVOs) {
+            convert(resourcesCategoryVO, treeVO);
+        }
         return treeVO;
     }
 

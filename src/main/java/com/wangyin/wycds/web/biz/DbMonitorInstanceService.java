@@ -53,8 +53,8 @@ public class DbMonitorInstanceService {
             } catch (ParseException e) {
                 logger.error("时间转换错误", e);
             }
-            double[] showData = {createDate.getTime(), Double.valueOf(instanceDO.getMonitorValue())};
-            instances.add(showData);
+            double[] monitorValue = {createDate.getTime(), Double.valueOf(instanceDO.getMonitorValue())};
+            instances.add(monitorValue);
         }
         return instances;
     }
@@ -78,8 +78,8 @@ public class DbMonitorInstanceService {
             } catch (ParseException e) {
                 logger.error("时间转换错误", e);
             }
-            double[] showData = {createDate.getTime(), Double.valueOf(instanceDO.getMonitorValue())};
-            instances.add(showData);
+            double[] monitorValue = {createDate.getTime(), Double.valueOf(instanceDO.getMonitorValue())};
+            instances.add(monitorValue);
         }
         return instances;
     }

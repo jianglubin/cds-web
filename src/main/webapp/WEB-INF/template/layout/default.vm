@@ -15,10 +15,12 @@
     <link charset="utf-8" rel="stylesheet" href="../html/css/dashboard.css" media="all" />
     <link charset="utf-8" rel="stylesheet" href="../html/css/select2.css"/>
     <link charset="utf-8" rel="stylesheet" href="../html/css/select2-bootstrap.css"/>
+    <link charset="utf-8" rel="stylesheet" href="../html/css/style.min.css" media="all" />
 ## js文件引入
     <script src="../html/js/jquery-1.9.1.js"></script>
     <script src="../html/js/select2.js"></script>
     <script src="../html/js/bootstrap.js"></script>
+    <script src="../html/js/jstree.min.js"></script>
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">

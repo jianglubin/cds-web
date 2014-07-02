@@ -17,9 +17,18 @@
             var value = $("#monitorItem").val();
             if (value != "全部指标") {
                 seriesOptions = [];
-                $.getJSON('../monitor/allInstance/' + value.toLowerCase(), function (data) {
+                $.getJSON('../monitor/allInstance/' + value.toLowerCase()+"/value", function (data) {
                     seriesOptions[0] = {
-                        name: value,
+                        name: value+"(value)",
+                        data: data
+                    };
+                    // As we're loading the data asynchronously, we don't know what order it will arrive. So
+                    // we keep a counter and create the chart when all the data is loaded.
+                    createChart(value,true);
+                });
+                $.getJSON('../monitor/allInstance/' + value.toLowerCase()+"/error", function (data) {
+                    seriesOptions[0] = {
+                        name: value+"(errorNum)",
                         data: data
                     };
                     // As we're loading the data asynchronously, we don't know what order it will arrive. So
@@ -29,9 +38,22 @@
             }
         });
         $.each(items, function (i, item) {
-            $.getJSON('../monitor/allInstance/' + item.toLowerCase(), function (data) {
+            $.getJSON('../monitor/allInstance/' + item.toLowerCase()+"/value", function (data) {
                 seriesOptions[i] = {
-                    name: item,
+                    name: item+"(value)",
+                    data: data
+                };
+                // As we're loading the data asynchronously, we don't know what order it will arrive. So
+                // we keep a counter and create the chart when all the data is loaded.
+                seriesCounter++;
+
+                if (seriesCounter == items.length) {
+                    createChart(item,false);
+                }
+            });
+            $.getJSON('../monitor/allInstance/' + item.toLowerCase()+"/error", function (data) {
+                seriesOptions[i] = {
+                    name: item+"(errorNum)",
                     data: data
                 };
                 // As we're loading the data asynchronously, we don't know what order it will arrive. So

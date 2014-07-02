@@ -3,6 +3,7 @@
     <li><a href="../monitorGroup/show">监控群组维护</a></li>
     <li><a href="../dbMonitor/show">监控项维护</a></li>
     <li><a href="../monitor/get">监控项展示</a></li>
+    <li><a href="../resourceCategory/show">资源类目</a></li>
     <li><a href="../dbgroup/show">数据库群组维护</a></li>
     <li><a href="../dbcluster/show">数据库集群维护</a></li>
     <li><a href="../datasource/mangershow">数据源维护</a></li>

@@ -5,6 +5,7 @@
 package com.wangyin.wycds.web.dal.datainterface;
 
 import com.wangyin.wycds.web.dal.dataobject.ResourcesCategoryDO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,5 +54,5 @@ public interface ResourcesCategoryDAO {
      * @param modifiedBy
      * @return
      */
-    public int deleteCategory(String id,String modifiedBy );
+    public int deleteCategory(@Param("id")String id,@Param("modifiedBy")String modifiedBy );
 }
